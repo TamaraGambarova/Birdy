@@ -4,15 +4,12 @@ import android.util.Log
 import birdy_grpc_.Birdy
 import birdy_grpc_.MainEndpointGrpc.newBlockingStub
 import io.grpc.Channel
-import io.grpc.ManagedChannelBuilder
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Repository {
+class Repository(private val channel: Channel) {
 
-    fun registerUser(channel: Channel) {
+    fun registerUser() {
 
         val blockingStub = newBlockingStub(channel)
 
@@ -31,6 +28,15 @@ class Repository {
 
         val res = response.result
 
+        Log.d("result", res.name)
+    }
+
+    fun findBirdByName(name: String) {
+        val blockingStub = newBlockingStub(channel)
+
+        val findBirdRequest = Birdy.FindBirdRequest.newBuilder().setName(name).build()
+        val response = blockingStub.findBird(findBirdRequest)
+        val res = response.res
         Log.d("result", res.name)
     }
 }

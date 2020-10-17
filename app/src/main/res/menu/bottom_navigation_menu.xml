@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+TODO: add icons for each item
+        android:icon="@drawable/ic_find"
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/find_bird"
+        android:enabled="true"
+        android:title="@string/find"/>
+    <item
+        android:id="@+id/top"
+        android:enabled="true"
+        android:title="@string/top"/>
+    <item
+        android:id="@+id/messages"
+        android:enabled="true"
+        android:title="@string/messages"/>
+    <item
+        android:id="@+id/profile"
+        android:enabled="true"
+        android:title="@string/profile"/>
+</menu>

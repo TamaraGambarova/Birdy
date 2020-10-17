@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.birdyapp"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -26,11 +26,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 protobuf {
     protoc { artifact = 'com.google.protobuf:protoc:3.12.0' }
     plugins {
-        grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.32.1' // CURRENT_GRPC_VERSION
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.32.1' // CURRENT_GRPC_VERSION
         }
     }
     generateProtoTasks {
@@ -40,7 +45,8 @@ protobuf {
             }
             task.plugins {
                 grpc { // Options added to --grpc_out
-                    option 'lite' }
+                    option 'lite'
+                }
             }
         }
     }
@@ -71,10 +77,13 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
 
-    //Room
-// Kotlin Android Coroutines
+    // Kotlin Android Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.0-RC1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0"
+
+    //
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     //
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"

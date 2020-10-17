@@ -1,4 +1,4 @@
-syntax="proto3";
+syntax = "proto3";
 package birdy_grpc;
 
 service MainEndpoint {
@@ -22,6 +22,7 @@ message RegistrationResponse {
 	enum Result{
 		OK = 0;
 		EMAIL_ALREADY_TAKEN = 1;
+		DB_ERROR = 2;
 	}
 	Result result = 1;
 }
@@ -35,6 +36,7 @@ message LoginResponse {
 		OK = 0;
 		WRONG_PASSWORD = 1;
 		LOGIN_NOT_FOUND = 2;
+		DB_ERROR = 3;
 	}
 	Result result = 1;
 }
@@ -88,6 +90,7 @@ message FindBirdResponse {
 	enum Result {
 		FOUND = 0;
 		NOT_FOUND = 1;
+		DB_ERROR = 2;
 	}
 	Result res = 1;
 	oneof data {
