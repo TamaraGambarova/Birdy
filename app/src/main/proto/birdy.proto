@@ -4,7 +4,7 @@ package birdy_grpc;
 service MainEndpoint {
 	rpc RegisterUser (RegistrationRequest) returns (RegistrationResponse) {}
 	rpc LoginUser(LoginRequest) returns (LoginResponse) {}
-	rpc FindBird(FindBirdRequest) returns (FindBirdResponse) {}
+	rpc FindBird(FindBirdRequest) returns (stream FindBirdResponse) {}
 	rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
 	rpc SubscribeToNewMessages(Empty) returns (stream ChatMessage) {}
 }
