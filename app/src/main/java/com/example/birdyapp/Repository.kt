@@ -1,42 +1,52 @@
 package com.example.birdyapp
 
+import android.os.Build
 import android.util.Log
-import birdy_grpc_.Birdy
-import birdy_grpc_.MainEndpointGrpc.newBlockingStub
+import androidx.annotation.RequiresApi
+import birdy_grpc.Birdy
+import birdy_grpc.MainEndpointGrpc.newBlockingStub
+
 import io.grpc.Channel
-import java.text.SimpleDateFormat
-import java.util.*
 
 class Repository(private val channel: Channel) {
 
-    fun registerUser() {
+    /*   fun registerUser() {
 
-        val blockingStub = newBlockingStub(channel)
+           val blockingStub = newBlockingStub(channel)
 
-        val request = Birdy.RegistrationRequest.newBuilder()
-            .setEmail("test@gmail.com")
-            .setPassword("123")
-            .setBirthDate(
-                SimpleDateFormat(
-                    "dd-MMM-yyyy",
-                    Locale.ENGLISH
-                ).format(Calendar.getInstance().time)
-            )
-            .build()
+           val request = Birdy.RegistrationRequest.newBuilder()
+               .setEmail("test@gmail.com")
+               .setPassword("123")
+               .setBirthDate(
+                   SimpleDateFormat(
+                       "dd-MMM-yyyy",
+                       Locale.ENGLISH
+                   ).format(Calendar.getInstance().time)
+               )
+               .build()
 
-        val response = blockingStub.registerUser(request)
+           val response = blockingStub.registerUser(request)
 
-        val res = response.result
+           val res = response.result
 
-        Log.d("result", res.name)
-    }
-
+           Log.d("result", res.name)
+       }
+   */
+    @RequiresApi(Build.VERSION_CODES.N)
     fun findBirdByName(name: String) {
         val blockingStub = newBlockingStub(channel)
+        val findBirdRequest = Birdy.FindBirdRequest.newBuilder().setName("вор").build()
+        val matchedBirds: Iterator<Birdy.FindBirdResponse> = blockingStub.findBird(findBirdRequest)
 
-        val findBirdRequest = Birdy.FindBirdRequest.newBuilder().setName(name).build()
-        val response = blockingStub.findBird(findBirdRequest)
-        val res = response.res
-        Log.d("result", res.name)
+        try{
+            matchedBirds.forEachRemaining {
+                Log.d("ptenchick", it.encInfo.description)
+                Log.d("ptenchick", it.encInfo.name)
+            }
+        } catch(e: Exception){
+            e.printStackTrace()
+        }
+
+
     }
 }

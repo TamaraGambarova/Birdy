@@ -23,8 +23,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
-        initBottomNavBar()
         initChannel()
+
+        initBottomNavBar()
 
 
 
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
             val selectedFragment: Fragment = when (it.itemId) {
                 R.id.find_bird -> {
-                    SearchBirdByNameFragment.getInstance()
+                    SearchBirdByNameFragment.getInstance(channel)
                 }
                 R.id.top -> {
                     TopFragment.getInstance()
