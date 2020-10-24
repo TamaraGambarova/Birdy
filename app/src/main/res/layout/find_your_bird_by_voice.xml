@@ -64,12 +64,12 @@
                     android:layout_width="96dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/standard_margin"
-                    android:text="@string/search"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
                     android:background="@drawable/background_button"
+                    android:text="Upload"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/birdNameLayout"/>
+                    app:layout_constraintTop_toTopOf="@+id/birdNameLayout" />
 
                 <TextView
                     android:id="@+id/resultsLabel"
