@@ -5,21 +5,29 @@ TODO: add icons for each item
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/home"
+        android:enabled="true"
+        android:title="home"
+        android:icon="@drawable/ic_home_icon"/>
+    <item
         android:id="@+id/top"
         android:enabled="true"
-        android:title="@string/top"/>
-    <item
-        android:id="@+id/messages"
-        android:enabled="true"
-        android:title="@string/messages"/>
+        android:title="@string/top"
+        android:icon="@drawable/ic_top_icon"/>
     <item
         android:id="@+id/find_bird"
         android:enabled="true"
         android:title="@string/find"
-        android:background="@android:color/red"
+        android:background-color="@android:color/red"
         android:icon="@drawable/ic_search_icon"/>
+    <item
+        android:id="@+id/messages"
+        android:enabled="true"
+        android:title="@string/messages"
+        android:icon="@drawable/ic_messages_icon"/>
     <item
         android:id="@+id/profile"
         android:enabled="true"
-        android:title="@string/profile"/>
+        android:title="@string/profile"
+        android:icon="@drawable/ic_account"/>
 </menu>
