@@ -4,6 +4,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.net.Uri
 import android.os.Build
@@ -26,13 +28,18 @@ import com.example.birdyapp.util.ScopedFragment
 import com.example.birdyapp.util.ToastManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.textfield.TextInputLayout
+import com.google.protobuf.ByteString
 import com.theartofdev.edmodo.cropper.CropImage
 import io.grpc.Channel
 import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 
 class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
@@ -47,7 +54,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private lateinit var currentLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var avatarFile: File
+    private lateinit var birdImageFile: File
 
     val birdName = MutableLiveData<String>()
 
@@ -74,10 +81,11 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private fun initButtons() {
         searchBtn.setOnClickListener {
             Log.d("FINDBIRD", "search started!")
-            Repository(channel).findBirdByName("вор")
+            Log.d("FINDBIRD", birdNameLayout.editText?.text.toString())
+            //birdName.value?.let { name -> Repository(channel).findBirdByName(name) }
             Log.d("FINDBIRD", "ready!")
         }
-        takePhotoBtn.setOnClickListener {
+        searchByUploadBtn.setOnClickListener {
             Log.d("test", "taking photo")
 
             cameraPermission.check(
@@ -88,7 +96,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     }
 
     private fun toCapture() {
-        avatarFile = createImageFile()
+        birdImageFile = createImageFile()
 
         val pictureIntent = Intent(
             MediaStore.ACTION_IMAGE_CAPTURE
@@ -98,7 +106,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
             val photoURI = FileProvider.getUriForFile(
                 requireContext(),
                 "com.example.birdyapp.provider",
-                avatarFile
+                birdImageFile
             )
             pictureIntent.putExtra(
                 MediaStore.EXTRA_OUTPUT,
@@ -130,19 +138,23 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
             toastManager.short(R.string.canceled)
         }
         if (requestCode == 404) {
-            Log.d("testPh", avatarFile.name)
+            Log.d("testPh", birdImageFile.name)
             //ImageViewUtil.loadImageFromFile(testImg, avatarFile)
             val photoURI = FileProvider.getUriForFile(
                 requireContext(),
                 "com.example.birdyapp.provider",
-                avatarFile
+                birdImageFile
             )
             launchImageCrop(photoURI)
         }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             val result = CropImage.getActivityResult(data)
             if(resultCode == Activity.RESULT_OK){
-                ImageViewUtil.loadImage(testImg, result.uri.toString(), resources.getDrawable(R.drawable.background_button))
+                ImageViewUtil.loadImage(
+                    testImg,
+                    result.uri.toString(),
+                    resources.getDrawable(R.drawable.background_button)
+                )
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
                 Log.e("", "Crop error: ${result.error}")
@@ -169,6 +181,22 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                         currentLocation = location
                         Log.d("lat", currentLocation.latitude.toString())
                         Log.d("long", currentLocation.longitude.toString())
+                        var fis: FileInputStream? = null
+                        try {
+                            fis = FileInputStream(birdImageFile)
+                        } catch (e: FileNotFoundException) {
+                            e.printStackTrace()
+                        }
+
+                        val bm: Bitmap = BitmapFactory.decodeStream(fis)
+                        val baos = ByteArrayOutputStream()
+                        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        val b: ByteArray = baos.toByteArray()
+                        Repository(channel).setBirdLocation(
+                            photo = ByteString.copyFrom(b),
+                            lat = currentLocation.latitude,
+                            long = currentLocation.longitude
+                        )
                     }
                 }
 

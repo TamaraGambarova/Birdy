@@ -23,7 +23,7 @@
             android:id="@+id/uploadOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:translationY="380">
+            android:translationY="380dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/searchbyPhotoBtn"
@@ -65,7 +65,7 @@
                 app:layout_constraintTop_toTopOf="@+id/birdNameLayout"
                 tools:itemCount="2"
                 tools:listitem="@drawable/background_button" />
-            />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -75,8 +75,8 @@
             android:text="Choose what you want to upload:"
             android:textAlignment="center"
             android:textSize="18sp"
-            android:translationX="70"
-            android:translationY="300" />
+            android:translationX="70dp"
+            android:translationY="300dp" />
 
     </RelativeLayout>
 

@@ -4,7 +4,8 @@ package birdy_grpc;
 service MainEndpoint {
 	rpc RegisterUser (RegistrationRequest) returns (RegistrationResponse) {}
 	rpc LoginUser(LoginRequest) returns (LoginResponse) {}
-	rpc FindBird(FindBirdRequest) returns (stream FindBirdResponse) {}
+	rpc FindBirdByName(FindBirdByNameRequest) returns (stream FindBirdByNameResponse) {}
+	rpc AddBirdWithData(AddBirdWithDataRequest) returns (AddBirdWithDataResponse) {}
 	rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
 	rpc SubscribeToNewMessages(Empty) returns (stream ChatMessage) {}
 }
@@ -62,10 +63,9 @@ message UserBirdInfo {
 		double latitude = 2;
 	}
 	Point found_point = 1;
-	Timestamp found_time = 2;
+	string found_time = 2;
 	string finder_email = 3;
-	EncyclopedicBirdInfo info = 4;
-	bytes sound = 5;
+	bytes sound = 4;
 }
 
 message EncyclopedicBirdInfo {
@@ -74,29 +74,27 @@ message EncyclopedicBirdInfo {
 	string description = 3;
 }
 
-message FindBirdRequest {
-	enum FindType{
-		BY_PHOTO = 0;
-		BY_SOUND = 1;
-		BY_NAME = 2;
-	}
-	FindType type = 1;
-	oneof data {
-		bytes media = 2;
-		string name = 3;
-	}
+message FindBirdByNameRequest {
+	string name = 1;
 }
-message FindBirdResponse {
+message AddBirdWithDataRequest {
+	UserBirdInfo info = 1;
+	bytes sound = 2;
+	bytes photo = 3;
+}
+
+message AddBirdWithDataResponse{
+	string bird_name = 1;
+}
+
+message FindBirdByNameResponse {
 	enum Result {
 		FOUND = 0;
 		NOT_FOUND = 1;
 		DB_ERROR = 2;
 	}
 	Result res = 1;
-	oneof data {
-		EncyclopedicBirdInfo enc_info = 2;
-		UserBirdInfo user_info = 3;
-	}
+	EncyclopedicBirdInfo enc_info = 2;
 }
 
 message SendMessageRequest {

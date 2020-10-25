@@ -48,12 +48,12 @@
                     app:layout_constraintTop_toBottomOf="@id/birdyLogo">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/birdName"
+                        android:id="@+id/birdNameText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/find_by_name_hint"
-                        android:inputType="textPassword"
-                        android:maxLength="8" />
+                        android:inputType="text"
+                        android:text="@{fragment.birdName}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageButton
@@ -108,33 +108,16 @@
                     app:layout_constraintTop_toTopOf="@id/filterIcon"
                     tools:background="@drawable/ic_launcher_background" />
 
-                <Button
-                    android:id="@+id/takePhotoBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="@dimen/standard_margin"
-                    android:background="@drawable/background_button"
-                    android:text="Take photo"
-                    android:textColor="@android:color/white"
-                    app:layout_constraintStart_toEndOf="@id/sortIcon"
-                    app:layout_constraintTop_toTopOf="@id/filterIcon" />
 
                 <ImageView
                     android:id="@+id/testImg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/takePhotoBtn"
-                    app:layout_constraintStart_toStartOf="@id/filterIcon"/>
+                    android:layout_width="256dp"
+                    android:layout_height="256dp"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    app:layout_constraintTop_toBottomOf="@id/resultsLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/birdsRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/filterIcon"
-                    android:layout_margin="@dimen/standard_margin"
-                    android:visibility="gone"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/layout_bird_item"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
