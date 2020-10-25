@@ -88,7 +88,17 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
+    // Better dateTime-time support even on older Android versions
+    implementation "com.jakewharton.threetenabp:threetenabp:1.1.0"
+    // Kodein
+    implementation "org.kodein.di:kodein-di-generic-jvm:$kodein_version"
+    implementation "org.kodein.di:kodein-di-framework-android-x:$kodein_version"
+
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
 
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+
+    //photo cropper
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 }
