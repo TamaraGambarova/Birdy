@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--
+    TODO: add spinner of tops"
+    -->
+    <data>
+
+        <import type="androidx.lifecycle.MutableLiveData" />
+
+        <variable
+            name="fragment"
+            type="com.example.birdyapp.features.searching_by_name.view.SearchBirdByNameFragment" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/birdyLogo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    android:icon="@drawable/ic_bird_logo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.044"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:background="@drawable/ic_launcher_background" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/birdNameLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="361dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/standard_margin"
+                    android:layout_marginTop="92dp"
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/birdyLogo">
+                    <!-- add spinner here -->
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/theremustbeSpinner"
+                        android:layout_width="361dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/find_by_name_hint"
+                        android:inputType="textPassword"
+                        android:maxLength="8" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/birdsRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/standard_margin"
+                    tools:itemCount="2"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="233dp"
+                    tools:listitem="@layout/layout_bird_item"
+                    />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="155dp"
+                    android:layout_height="51dp"
+                    android:text="Birds Top"
+                    android:textAlignment="center"
+                    android:textSize="36sp"
+                    tools:layout_editor_absoluteX="128dp"
+                    tools:layout_editor_absoluteY="86dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- navigation bar -->
+
+    </RelativeLayout>
+
+
+</layout>
