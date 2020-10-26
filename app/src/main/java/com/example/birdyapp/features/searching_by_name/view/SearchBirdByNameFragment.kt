@@ -137,7 +137,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         if (resultCode == Activity.RESULT_CANCELED) {
             toastManager.short(R.string.canceled)
         }
-        if (requestCode == 404) {
+        if (requestCode == 404 && resultCode == Activity.RESULT_OK) {
             Log.d("testPh", birdImageFile.name)
             //ImageViewUtil.loadImageFromFile(testImg, avatarFile)
             val photoURI = FileProvider.getUriForFile(
@@ -147,16 +147,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
             )
             launchImageCrop(photoURI)
         }
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val result = CropImage.getActivityResult(data)
-            if(resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 ImageViewUtil.loadImage(
                     testImg,
                     result.uri.toString(),
                     resources.getDrawable(R.drawable.background_button)
                 )
-
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Log.e("", "Crop error: ${result.error}")
             }
             getLastKnownLocation()
