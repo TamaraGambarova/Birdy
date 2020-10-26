@@ -18,21 +18,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.birdyapp.R
-import com.example.birdyapp.Repository
-import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
-import com.example.birdyapp.util.ImageViewUtil
+import com.example.birdyapp.databinding.FragmentOfflineBirdsBinding
+import com.example.birdyapp.db.BirdsDao
+import com.example.birdyapp.db.OfflineBirdsModel
 import com.example.birdyapp.util.PermissionManager
 import com.example.birdyapp.util.ScopedFragment
 import com.example.birdyapp.util.ToastManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.textfield.TextInputLayout
-import com.google.protobuf.ByteString
 import com.theartofdev.edmodo.cropper.CropImage
 import io.grpc.Channel
 import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
+import kotlinx.android.synthetic.main.fragment_find_bird_by_name.uploadBtn
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
@@ -41,22 +41,22 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 
-class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
+class OfflineFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
     private val toastManager: ToastManager by instance()
-
+    private lateinit var currentLocation: Location
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val cameraPermission = PermissionManager(Manifest.permission.CAMERA, 404)
     private val fineLocationPermission =
         PermissionManager(Manifest.permission.ACCESS_FINE_LOCATION, 2)
     private val coarseLocationPermission =
         PermissionManager(Manifest.permission.ACCESS_COARSE_LOCATION, 3)
-
-    private lateinit var currentLocation: Location
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     private lateinit var birdImageFile: File
-
+    private var photoURI: Uri? = null
     val birdName = MutableLiveData<String>()
+    val offlineDao: BirdsDao by instance()
+
+    val data: LiveData<List<OfflineBirdsModel>> = offlineDao.getBirds()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,27 +64,22 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         savedInstanceState: Bundle?
     ): View? {
         val binding =
-            FragmentFindBirdByNameBinding.inflate(inflater, container, false)
+            FragmentOfflineBirdsBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             initButtons()
         }
+        Log.d("test", data.value?.size.toString())
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initButtons() {
-        searchBtn.setOnClickListener {
-            Log.d("FINDBIRD", "search started!")
-            Log.d("FINDBIRD", birdNameLayout.editText?.text.toString())
-            //birdName.value?.let { name -> Repository(channel).findBirdByName(name) }
-            Log.d("FINDBIRD", "ready!")
-        }
         uploadBtn.setOnClickListener {
             Log.d("test", "taking photo")
 
@@ -140,21 +135,16 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         if (requestCode == 404 && resultCode == Activity.RESULT_OK) {
             Log.d("testPh", birdImageFile.name)
             //ImageViewUtil.loadImageFromFile(testImg, avatarFile)
-            val photoURI = FileProvider.getUriForFile(
+            photoURI = FileProvider.getUriForFile(
                 requireContext(),
                 "com.example.birdyapp.provider",
                 birdImageFile
             )
-            launchImageCrop(photoURI)
-        }
-        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            launchImageCrop(photoURI!!)
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
-                ImageViewUtil.loadImage(
-                    testImg,
-                    result.uri.toString(),
-                    resources.getDrawable(R.drawable.background_button)
-                )
+                testImg.setImageURI(result.uri)
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Log.e("", "Crop error: ${result.error}")
             }
@@ -191,11 +181,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                         val baos = ByteArrayOutputStream()
                         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                         val b: ByteArray = baos.toByteArray()
-                        Repository(channel).setBirdLocation(
-                            photo = ByteString.copyFrom(b),
-                            lat = currentLocation.latitude,
-                            long = currentLocation.longitude
+
+                        saveNewBird(
+                            OfflineBirdsModel(
+                                lat = currentLocation.latitude,
+                                longitude = currentLocation.longitude,
+                                photo = photoURI.toString()
+                            )
                         )
+
                     }
                 }
 
@@ -204,8 +198,11 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         }
     }
 
-    companion object {
-        fun getInstance(channel: Channel) = SearchBirdByNameFragment(channel)
+    private fun saveNewBird(bird: OfflineBirdsModel) {
+        offlineDao.insert(bird)
     }
 
+    companion object {
+        fun getInstance(channel: Channel) = OfflineFragment(channel)
+    }
 }

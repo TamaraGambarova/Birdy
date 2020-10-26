@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.birdyapp.databinding.ActivityMainBinding
 import com.example.birdyapp.features.messages.MessagesFragment
-import com.example.birdyapp.features.profile.ProfileFragment
+import com.example.birdyapp.features.searching_by_name.view.OfflineFragment
 import com.example.birdyapp.features.searching_by_name.view.SearchBirdByNameFragment
 import com.example.birdyapp.features.top.TopFragment
 import io.grpc.Channel
@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
         initChannel()
 
         initBottomNavBar()
-
 
 
         /*  registerBtn.setOnClickListener {
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                     MessagesFragment.getInstance()
                 }
                 R.id.profile -> {
-                    ProfileFragment.getInstance()
+                    OfflineFragment.getInstance(channel)
                 }
                 else -> return@setOnNavigationItemSelectedListener false
             }

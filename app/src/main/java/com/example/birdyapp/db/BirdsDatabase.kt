@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
     version = 1
 )
 abstract class BirdsDatabase : RoomDatabase() {
-    abstract fun currentBalancesInfo() : BirdsDao
+    abstract fun offlineBirdsInfo() : BirdsDao
 
     companion object{
         @Volatile
