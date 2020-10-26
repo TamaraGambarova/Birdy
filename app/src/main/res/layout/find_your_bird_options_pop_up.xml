@@ -25,35 +25,25 @@
             android:layout_height="wrap_content"
             android:translationY="380dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/searchbyPhotoBtn"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:id="@+id/searchByPhotoBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="236dp"
                 android:background="@drawable/background_button"
-                android:drawablePadding="10dp"
-                android:icon="@drawable/ic_upload_photo_icon"
-                android:padding="10dp"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/birdNameLayout" />
+                android:src="@drawable/ic_upload_photo_icon"
+                app:layout_constraintTop_toTopOf="@+id/birdNameLayout"
+                tools:layout_editor_absoluteX="120dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/searchbyVoiceBtn"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:id="@+id/searchByVoiceBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="120dp"
                 android:background="@drawable/background_button"
-                android:drawablePadding="10dp"
-                android:icon="@drawable/ic_bird_voice_icon"
-                android:padding="10dp"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/birdNameLayout" />
+                android:src="@drawable/ic_bird_voice_icon"
+                app:layout_constraintTop_toTopOf="@+id/birdNameLayout"
+                tools:layout_editor_absoluteX="233dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/birdsRecycler"
