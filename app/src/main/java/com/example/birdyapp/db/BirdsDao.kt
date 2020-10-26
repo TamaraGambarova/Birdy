@@ -9,8 +9,8 @@ import androidx.room.Query
 @Dao
 interface BirdsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(rates: List<OfflineBirdsModel>)
+    fun insert(rates: OfflineBirdsModel)
 
     @Query("select * from offline_birds")
-    fun getBalances() : LiveData<List<OfflineBirdsModel>>
+    fun getBirds() : LiveData<List<OfflineBirdsModel>>
 }

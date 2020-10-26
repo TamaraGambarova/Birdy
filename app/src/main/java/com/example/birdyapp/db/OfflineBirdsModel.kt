@@ -5,9 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "offline_birds")
 data class OfflineBirdsModel(
-    @PrimaryKey
-    val id: Int,
     val lat: Double,
     val longitude: Double,
-    val photo: String
+    val photo: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = null
+
 )
