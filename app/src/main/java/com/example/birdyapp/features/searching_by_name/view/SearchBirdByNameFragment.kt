@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
+import java.lang.Exception
 
 class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
@@ -83,6 +84,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
             Log.d("FINDBIRD", "search started!")
             Log.d("FINDBIRD", birdNameLayout.editText?.text.toString())
             //birdName.value?.let { name -> Repository(channel).findBirdByName(name) }
+            if (validate(birdNameLayout.editText?.text.toString())) {
+                try {
+                    Repository(channel).findBirdByName(birdNameLayout.editText?.text.toString())
+                } catch (e: Exception) {
+                    toastManager.long("Something went wrong, try again")
+                }
+            } else {
+                toastManager.long("Incorrect bird name, try again")
+            }
             Log.d("FINDBIRD", "ready!")
         }
         uploadBtn.setOnClickListener {
@@ -146,8 +156,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                 birdImageFile
             )
             launchImageCrop(photoURI)
-        }
-        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
                 ImageViewUtil.loadImage(
@@ -202,6 +211,11 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         }) {
             toastManager.short(R.string.grant_location_permission)
         }
+    }
+
+    private fun validate(value: String): Boolean {
+        return value.filter { it in 'A'..'Z' || it in 'a'..'z' || it == '-' ||
+                it == ' ' || it in 'А'..'Я' || it in 'а'..'я'}.length == value.length
     }
 
     companion object {

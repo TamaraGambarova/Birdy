@@ -24,6 +24,8 @@ class App: Application(), KodeinAware {
 
         bind() from provider { instance<BirdsDatabase>().offlineBirdsInfo() }
 
+
+
         //network
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptor() }
     }

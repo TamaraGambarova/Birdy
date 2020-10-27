@@ -20,6 +20,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.birdyapp.R
 import com.example.birdyapp.databinding.FragmentOfflineBirdsBinding
 import com.example.birdyapp.db.BirdsDao
@@ -30,9 +32,14 @@ import com.example.birdyapp.util.ToastManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.theartofdev.edmodo.cropper.CropImage
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import io.grpc.Channel
 import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
 import kotlinx.android.synthetic.main.fragment_find_bird_by_name.uploadBtn
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
@@ -56,7 +63,6 @@ class OfflineFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     val birdName = MutableLiveData<String>()
     val offlineDao: BirdsDao by instance()
 
-    val data: LiveData<List<OfflineBirdsModel>> = offlineDao.getBirds()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,7 +80,21 @@ class OfflineFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             initButtons()
         }
-        Log.d("test", data.value?.size.toString())
+        val data: LiveData<out List<OfflineBirdsModel>> = offlineDao.getBirds()
+
+        data.observe(viewLifecycleOwner, Observer {
+            if (it.isNullOrEmpty()) {
+                //viewModel.refreshData()
+                return@Observer
+            }
+
+            it.map {
+                Log.d("test--" , it.lat.toString() + " " + it.longitude.toString())
+                Log.d("test--" , it.photo)
+            }
+
+        })
+        Log.d("test--", data.value?.size.toString())
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
@@ -199,7 +219,30 @@ class OfflineFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     }
 
     private fun saveNewBird(bird: OfflineBirdsModel) {
-        offlineDao.insert(bird)
+        Log.d("test", "//" + offlineDao.getBirds().value?.size.toString())
+        GlobalScope.launch(Dispatchers.IO){
+            offlineDao.insert(bird)
+
+        }
+        Log.d("test", "//" + offlineDao.getBirds().value?.size.toString())
+
+    }
+
+    private fun initRecyclerView(items: List<OfflineBirdItem>) {
+
+        val groupAdapter = GroupAdapter<ViewHolder>().apply {
+            addAll(items)
+        }
+        /*groupAdapter.setOnItemClickListener { item, view ->
+            showHistoryDetails(
+                (item as OfflineBirdsModel).getBalanceId(),
+                item.getAsset(), view
+            )
+        }*/
+        birdsRecycler.apply {
+            layoutManager = LinearLayoutManager(this@OfflineFragment.context)
+            adapter = groupAdapter
+        }
     }
 
     companion object {

@@ -74,4 +74,5 @@ class Repository(private val channel: Channel) {
             blockingStub.addBirdWithData(setLocationRequest).toBuilder().build()
         Log.d("test-loc", response.birdName)
     }
+
 }
