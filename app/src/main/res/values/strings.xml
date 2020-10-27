@@ -7,4 +7,8 @@
     <string name="top">Top</string>
     <string name="messages">Messages</string>
     <string name="profile">Profile</string>
+    <string name="grant_camera_permission">Please, grant camera permission!</string>
+    <string name="canceled">Canceled</string>
+    <string name="grant_location_permission">Please grant your location permission</string>
+    <string name="home">Home</string>
 </resources>
