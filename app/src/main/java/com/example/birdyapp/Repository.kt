@@ -5,14 +5,19 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import birdy_grpc.Birdy
 import birdy_grpc.MainEndpointGrpc.newBlockingStub
+import birdy_grpc.MainEndpointGrpc.newFutureStub
 import com.google.protobuf.ByteString
 
 import io.grpc.Channel
+import io.reactivex.Completable
+import io.reactivex.rxkotlin.toSingle
+import java.text.SimpleDateFormat
 import java.util.*
 
 class Repository(private val channel: Channel) {
 
-    /*   fun registerUser() {
+       //TODO:: not implemented yet
+       fun registerUser() {
 
            val blockingStub = newBlockingStub(channel)
 
@@ -33,7 +38,6 @@ class Repository(private val channel: Channel) {
 
            Log.d("result", res.name)
        }
-   */
     @RequiresApi(Build.VERSION_CODES.N)
     fun findBirdByName(name: String) {
         val blockingStub = newBlockingStub(channel)
@@ -65,7 +69,8 @@ class Repository(private val channel: Channel) {
                             Birdy.UserBirdInfo.Point.newBuilder()
                                 .setLatitude(lat)
                                 .setLongitude(long)
-                                .build())
+                                .build()
+                        )
                         .setFinderEmail("test@gmail.com")
                         .setFoundTime(Calendar.getInstance().time.toString())
                 ).build()
@@ -73,5 +78,17 @@ class Repository(private val channel: Channel) {
         val response =
             blockingStub.addBirdWithData(setLocationRequest).toBuilder().build()
         Log.d("test-loc", response.birdName)
+    }
+
+    fun loginUser(email: String, password: String): Completable {
+        val blockingStub = newBlockingStub(channel)
+        val loginRequest = Birdy.LoginRequest.newBuilder()
+            .setEmail(email)
+            .setPassword(password)
+            .build()
+
+        val response = blockingStub.loginUser(loginRequest)
+
+        return response.result.toSingle().ignoreElement()
     }
 }
