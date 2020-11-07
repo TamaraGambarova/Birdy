@@ -10,5 +10,4 @@ data class OfflineBirdsModel(
     val photo: String,
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null
-
 )

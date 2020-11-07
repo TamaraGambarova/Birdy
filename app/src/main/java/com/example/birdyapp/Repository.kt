@@ -5,60 +5,47 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import birdy_grpc.Birdy
 import birdy_grpc.MainEndpointGrpc.newBlockingStub
-import birdy_grpc.MainEndpointGrpc.newFutureStub
+import com.example.birdyapp.features.searching_by_name.model.BirdModel
+import com.example.birdyapp.features.sign_up.model.User
+import com.example.birdyapp.features.sign_up.model.UserFields
 import com.google.protobuf.ByteString
 
 import io.grpc.Channel
 import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.rxkotlin.toSingle
 import java.text.SimpleDateFormat
 import java.util.*
 
 class Repository(private val channel: Channel) {
 
-       //TODO:: not implemented yet
-       fun registerUser() {
 
-           val blockingStub = newBlockingStub(channel)
-
-           val request = Birdy.RegistrationRequest.newBuilder()
-               .setEmail("test@gmail.com")
-               .setPassword("123")
-               .setBirthDate(
-                   SimpleDateFormat(
-                       "dd-MMM-yyyy",
-                       Locale.ENGLISH
-                   ).format(Calendar.getInstance().time)
-               )
-               .build()
-
-           val response = blockingStub.registerUser(request)
-
-           val res = response.result
-
-           Log.d("result", res.name)
-       }
     @RequiresApi(Build.VERSION_CODES.N)
-    fun findBirdByName(name: String) {
+    fun findBirdByName(name: String): Single<List<BirdModel>> {
         val blockingStub = newBlockingStub(channel)
         val findBirdRequest = Birdy.FindBirdByNameRequest
             .newBuilder()
-            .setName("вор")
+            .setName(name)
             .build()
-        val matchedBirds: Iterator<Birdy.FindBirdByNameResponse> =
+        val birds: Iterator<Birdy.FindBirdByNameResponse> =
             blockingStub.findBirdByName(findBirdRequest)
 
-        try {
-            matchedBirds.forEachRemaining {
-                Log.d("ptenchick", it.encInfo.description)
-                Log.d("ptenchick", it.encInfo.name)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        val matchedBirds = mutableListOf<BirdModel>()
+        birds.forEachRemaining {
+            matchedBirds.add(
+                BirdModel(
+                    it.encInfo.name,
+                    it.encInfo.description,
+                    it.encInfo.photo.toByteArray()
+                )
+            )
+            Log.d("ptenchick", it.encInfo.description)
+            Log.d("ptenchick", it.encInfo.name)
         }
+        return matchedBirds.toSingle()
     }
 
-    fun setBirdLocation(photo: ByteString, lat: Double, long: Double) {
+    fun setBirdLocation(photo: ByteString, lat: Double, long: Double, finder: String) {
         val blockingStub = newBlockingStub(channel)
         val setLocationRequest =
             Birdy.AddBirdWithDataRequest.newBuilder()
@@ -71,7 +58,7 @@ class Repository(private val channel: Channel) {
                                 .setLongitude(long)
                                 .build()
                         )
-                        .setFinderEmail("test@gmail.com")
+                        .setFinderEmail(finder)
                         .setFoundTime(Calendar.getInstance().time.toString())
                 ).build()
 
@@ -88,6 +75,30 @@ class Repository(private val channel: Channel) {
             .build()
 
         val response = blockingStub.loginUser(loginRequest)
+
+        return response.result.toSingle().ignoreElement()
+    }
+
+    fun registerUser(email: String, password: String, user: UserFields): Completable {
+
+        val blockingStub = newBlockingStub(channel)
+
+        val request = Birdy.RegistrationRequest.newBuilder()
+            .setEmail(email)
+            .setPassword(password)
+            .setFirstName(user.firstName.value)
+            .setLastName(user.lastName.value)
+            .setMiddleName(user.middleName.value)
+            .setCity(user.city.value)
+            .setBirthDate(
+                SimpleDateFormat(
+                    "dd-MMM-yyyy",
+                    Locale.ENGLISH
+                ).format(user.birthdayDate)
+            )
+            .build()
+
+        val response = blockingStub.registerUser(request)
 
         return response.result.toSingle().ignoreElement()
     }

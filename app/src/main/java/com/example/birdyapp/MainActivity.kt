@@ -13,12 +13,13 @@ import com.example.birdyapp.features.top.TopFragment
 import com.example.birdyapp.util.ActivitiesUtil.initChannel
 import io.grpc.Channel
 import io.grpc.ManagedChannel
-import io.grpc.ManagedChannelBuilder
+import io.reactivex.disposables.CompositeDisposable
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var channel: Channel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

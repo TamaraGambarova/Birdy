@@ -26,20 +26,21 @@ import com.example.birdyapp.R
 import com.example.birdyapp.databinding.FragmentOfflineBirdsBinding
 import com.example.birdyapp.db.BirdsDao
 import com.example.birdyapp.db.OfflineBirdsModel
+import com.example.birdyapp.features.searching_by_name.view.adapters.OfflineBirdsAdapter
+import com.example.birdyapp.util.ObservableTransformers
 import com.example.birdyapp.util.PermissionManager
 import com.example.birdyapp.util.ScopedFragment
 import com.example.birdyapp.util.ToastManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.theartofdev.edmodo.cropper.CropImage
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.ViewHolder
 import io.grpc.Channel
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
+import kotlinx.android.synthetic.main.fragment_find_bird_by_name.testImg
 import kotlinx.android.synthetic.main.fragment_find_bird_by_name.uploadBtn
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.android.synthetic.main.fragment_offline_birds.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
@@ -62,7 +63,10 @@ class OfflineFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     private var photoURI: Uri? = null
     val birdName = MutableLiveData<String>()
     val offlineDao: BirdsDao by instance()
-
+    val compositeDisposable = CompositeDisposable()
+    private val birdsAdapter: OfflineBirdsAdapter by lazy {
+        OfflineBirdsAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,9 +92,11 @@ class OfflineFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
                 return@Observer
             }
 
+            initRecyclerView(it)
             it.map {
-                Log.d("test--" , it.lat.toString() + " " + it.longitude.toString())
-                Log.d("test--" , it.photo)
+
+                Log.d("test--", it.lat.toString() + " " + it.longitude.toString())
+                Log.d("test--", it.photo)
             }
 
         })
@@ -220,29 +226,22 @@ class OfflineFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
 
     private fun saveNewBird(bird: OfflineBirdsModel) {
         Log.d("test", "//" + offlineDao.getBirds().value?.size.toString())
-        GlobalScope.launch(Dispatchers.IO){
-            offlineDao.insert(bird)
-
-        }
+        offlineDao.insert(bird)
+            .compose(ObservableTransformers.defaultSchedulersCompletable())
+            .subscribe {
+                toastManager.short("Photo added to saved!")
+            }
+            .addTo(compositeDisposable)
         Log.d("test", "//" + offlineDao.getBirds().value?.size.toString())
-
     }
 
-    private fun initRecyclerView(items: List<OfflineBirdItem>) {
+    private fun initRecyclerView(items: List<OfflineBirdsModel>) {
 
-        val groupAdapter = GroupAdapter<ViewHolder>().apply {
-            addAll(items)
-        }
-        /*groupAdapter.setOnItemClickListener { item, view ->
-            showHistoryDetails(
-                (item as OfflineBirdsModel).getBalanceId(),
-                item.getAsset(), view
-            )
-        }*/
-        birdsRecycler.apply {
+        birds_offline_recycler.apply {
             layoutManager = LinearLayoutManager(this@OfflineFragment.context)
-            adapter = groupAdapter
+            adapter = birdsAdapter
         }
+        birdsAdapter.replace(items)
     }
 
     companion object {
