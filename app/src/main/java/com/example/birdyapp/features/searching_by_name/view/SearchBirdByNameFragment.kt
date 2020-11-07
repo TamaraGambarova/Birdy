@@ -19,19 +19,19 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
-import com.example.birdyapp.util.ImageViewUtil
-import com.example.birdyapp.util.PermissionManager
-import com.example.birdyapp.util.ScopedFragment
-import com.example.birdyapp.util.ToastManager
+import com.example.birdyapp.features.searching_by_name.model.BirdModel
+import com.example.birdyapp.features.searching_by_name.view.adapters.BirdsAdapter
+import com.example.birdyapp.util.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.textfield.TextInputLayout
 import com.google.protobuf.ByteString
 import com.theartofdev.edmodo.cropper.CropImage
 import io.grpc.Channel
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -40,7 +40,6 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.lang.Exception
 
 class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
@@ -52,10 +51,16 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private val coarseLocationPermission =
         PermissionManager(Manifest.permission.ACCESS_COARSE_LOCATION, 3)
 
+    private val birdsAdapter: BirdsAdapter by lazy {
+        BirdsAdapter()
+    }
+
+
     private lateinit var currentLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var birdImageFile: File
+    val isLoading = MutableLiveData<Boolean>(false)
 
     val birdName = MutableLiveData<String>()
 
@@ -81,27 +86,45 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initButtons() {
         searchBtn.setOnClickListener {
-            Log.d("FINDBIRD", "search started!")
-            Log.d("FINDBIRD", birdNameLayout.editText?.text.toString())
-            //birdName.value?.let { name -> Repository(channel).findBirdByName(name) }
-            if (validate(birdNameLayout.editText?.text.toString())) {
-                try {
-                    Repository(channel).findBirdByName(birdNameLayout.editText?.text.toString())
-                } catch (e: Exception) {
-                    toastManager.long("Something went wrong, try again")
-                }
-            } else {
-                toastManager.long("Incorrect bird name, try again")
-            }
-            Log.d("FINDBIRD", "ready!")
+            searchByName()
         }
         uploadBtn.setOnClickListener {
-            Log.d("test", "taking photo")
-
             cameraPermission.check(
                 requireActivity(),
                 this::toCapture
             ) { toastManager.short(R.string.grant_camera_permission) }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun searchByName() {
+        if (validate(birdNameLayout.editText?.text.toString())) {
+            try {
+                Repository(channel).findBirdByName(birdNameLayout.editText?.text.toString())
+                    .compose(ObservableTransformers.defaultSchedulersSingle())
+                    .doOnSubscribe {
+                        isLoading.postValue(true)
+                    }
+                    .doOnEvent { _, _ ->
+                        isLoading.postValue(false)
+                    }
+                    .subscribeBy({
+                        fillBirdsRecyclerView(it)
+                    })
+            } catch (e: Exception) {
+                toastManager.long("Something went wrong, try again")
+            }
+        } else {
+            toastManager.long("Incorrect bird name, try again")
+        }
+    }
+
+    private fun fillBirdsRecyclerView(list: List<BirdModel>) {
+        with(birdsRecycler) {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = birdsAdapter
+            birdsAdapter.replace(list)
         }
     }
 
@@ -203,7 +226,8 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                         Repository(channel).setBirdLocation(
                             photo = ByteString.copyFrom(b),
                             lat = currentLocation.latitude,
-                            long = currentLocation.longitude
+                            long = currentLocation.longitude,
+                            finder = "test@gmail.com"
                         )
                     }
                 }
@@ -214,8 +238,10 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     }
 
     private fun validate(value: String): Boolean {
-        return value.filter { it in 'A'..'Z' || it in 'a'..'z' || it == '-' ||
-                it == ' ' || it in 'А'..'Я' || it in 'а'..'я'}.length == value.length
+        return value.filter {
+            it in 'A'..'Z' || it in 'a'..'z' || it == '-' ||
+                    it == ' ' || it in 'А'..'Я' || it in 'а'..'я'
+        }.length == value.length
     }
 
     companion object {

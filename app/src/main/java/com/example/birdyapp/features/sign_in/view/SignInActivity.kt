@@ -1,16 +1,22 @@
 package com.example.birdyapp.features.sign_in.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
+import com.example.birdyapp.MainActivity
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
-import com.example.birdyapp.databinding.ActivityMainBinding
+import com.example.birdyapp.databinding.ActivitySignInBinding
+import com.example.birdyapp.extensions.makeLinks
 import com.example.birdyapp.features.sign_in.model.Credentials
+import com.example.birdyapp.features.sign_up.view.SignUpActivity
 import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.util.ActivitiesUtil
+import com.example.birdyapp.util.ToastManager
 import io.grpc.Channel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -24,6 +30,7 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
     private val credentialsProvider: CredentialsProvider by instance()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private lateinit var channel: Channel
+    private val toastManager: ToastManager by instance()
 
     val isLoading = MutableLiveData(false)
 
@@ -35,14 +42,15 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
 
-        val binding: ActivityMainBinding =
+        val binding: ActivitySignInBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_sign_in)
         binding.lifecycleOwner = this
         channel = ActivitiesUtil.initChannel()
-        intButtons()
+        initButtons()
+        initFields()
     }
 
-    private fun intButtons() {
+    private fun initButtons() {
         login_button.setOnClickListener {
 
             ActivitiesUtil.hideKeyboard(this)
@@ -58,6 +66,19 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
         }
     }
 
+    private fun initFields() {
+        dont_have_account_text_view.makeLinks(
+            Pair("Create one", View.OnClickListener {
+                startActivity(
+                    Intent(
+                        this,
+                        SignUpActivity::class.java
+                    )
+                )
+            })
+        )
+    }
+
     private fun signIn(email: String, password: String) {
         Repository(channel).loginUser(email, password)
             .doOnSubscribe {
@@ -67,9 +88,16 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
                 isLoading.postValue(false)
             }
             .subscribe {
-                //go to MainActivity
+                goToMainActivity()
             }
             .addTo(compositeDisposable)
         credentialsProvider.setCredentials(Credentials(email, password))
+    }
+
+    private fun goToMainActivity() {
+        Intent(
+            this,
+            MainActivity::class.java
+        )
     }
 }
