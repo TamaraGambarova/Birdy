@@ -10,11 +10,11 @@
     <string name="grant_camera_permission">Please, grant camera permission!</string>
     <string name="canceled">Canceled</string>
     <string name="grant_location_permission">Please grant your location permission</string>
-    <string name="login_welcome">Welcome</string>
+    <string name="login_welcome">Sign In</string>
     <string name="copyrights">© 2020 Birdy Inc. All Rights Reserved</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
-    <string name="login_button_text">Log in</string>
+    <string name="login_button_text">Sign in</string>
     <string name="processing_progress">Processing</string>
     <string name="dont_have_account">Don\'t have an account? Create one!</string>
     <string name="error_invalid_email">Invalid email</string>
