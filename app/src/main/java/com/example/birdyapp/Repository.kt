@@ -1,42 +1,105 @@
 package com.example.birdyapp
 
+import android.os.Build
 import android.util.Log
-import birdy_grpc_.Birdy
-import birdy_grpc_.MainEndpointGrpc.newBlockingStub
+import androidx.annotation.RequiresApi
+import birdy_grpc.Birdy
+import birdy_grpc.MainEndpointGrpc.newBlockingStub
+import com.example.birdyapp.features.searching_by_name.model.BirdModel
+import com.example.birdyapp.features.sign_up.model.User
+import com.example.birdyapp.features.sign_up.model.UserFields
+import com.google.protobuf.ByteString
+
 import io.grpc.Channel
+import io.reactivex.Completable
+import io.reactivex.Single
+import io.reactivex.rxkotlin.toSingle
 import java.text.SimpleDateFormat
 import java.util.*
 
 class Repository(private val channel: Channel) {
 
-    fun registerUser() {
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun findBirdByName(name: String): Single<List<BirdModel>> {
+        val blockingStub = newBlockingStub(channel)
+        val findBirdRequest = Birdy.FindBirdByNameRequest
+            .newBuilder()
+            .setName(name)
+            .build()
+        val birds: Iterator<Birdy.FindBirdByNameResponse> =
+            blockingStub.findBirdByName(findBirdRequest)
+
+        val matchedBirds = mutableListOf<BirdModel>()
+        birds.forEachRemaining {
+            matchedBirds.add(
+                BirdModel(
+                    it.encInfo.name,
+                    it.encInfo.description,
+                    it.encInfo.photo.toByteArray()
+                )
+            )
+            Log.d("ptenchick", it.encInfo.description)
+            Log.d("ptenchick", it.encInfo.name)
+        }
+        return matchedBirds.toSingle()
+    }
+
+    fun setBirdLocation(photo: ByteString, lat: Double, long: Double, finder: String) {
+        val blockingStub = newBlockingStub(channel)
+        val setLocationRequest =
+            Birdy.AddBirdWithDataRequest.newBuilder()
+                .setPhoto(photo)
+                .setInfo(
+                    Birdy.UserBirdInfo.newBuilder()
+                        .setFoundPoint(
+                            Birdy.UserBirdInfo.Point.newBuilder()
+                                .setLatitude(lat)
+                                .setLongitude(long)
+                                .build()
+                        )
+                        .setFinderEmail(finder)
+                        .setFoundTime(Calendar.getInstance().time.toString())
+                ).build()
+
+        val response =
+            blockingStub.addBirdWithData(setLocationRequest).toBuilder().build()
+        Log.d("test-loc", response.birdName)
+    }
+
+    fun loginUser(email: String, password: String): Completable {
+        val blockingStub = newBlockingStub(channel)
+        val loginRequest = Birdy.LoginRequest.newBuilder()
+            .setEmail(email)
+            .setPassword(password)
+            .build()
+
+        val response = blockingStub.loginUser(loginRequest)
+
+        return response.result.toSingle().ignoreElement()
+    }
+
+    fun registerUser(email: String, password: String, user: UserFields): Completable {
 
         val blockingStub = newBlockingStub(channel)
 
         val request = Birdy.RegistrationRequest.newBuilder()
-            .setEmail("test@gmail.com")
-            .setPassword("123")
+            .setEmail(email)
+            .setPassword(password)
+            .setFirstName(user.firstName.value)
+            .setLastName(user.lastName.value)
+            .setMiddleName(user.middleName.value)
+            .setCity(user.city.value)
             .setBirthDate(
                 SimpleDateFormat(
                     "dd-MMM-yyyy",
                     Locale.ENGLISH
-                ).format(Calendar.getInstance().time)
+                ).format(user.birthdayDate)
             )
             .build()
 
         val response = blockingStub.registerUser(request)
 
-        val res = response.result
-
-        Log.d("result", res.name)
-    }
-
-    fun findBirdByName(name: String) {
-        val blockingStub = newBlockingStub(channel)
-
-        val findBirdRequest = Birdy.FindBirdRequest.newBuilder().setName(name).build()
-        val response = blockingStub.findBird(findBirdRequest)
-        val res = response.res
-        Log.d("result", res.name)
+        return response.result.toSingle().ignoreElement()
     }
 }

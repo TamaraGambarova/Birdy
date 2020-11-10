@@ -55,7 +55,7 @@
                 app:layout_constraintTop_toTopOf="@+id/birdNameLayout"
                 tools:itemCount="2"
                 tools:listitem="@drawable/background_button" />
-            />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView

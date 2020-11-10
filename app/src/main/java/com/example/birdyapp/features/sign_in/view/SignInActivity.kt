@@ -1,0 +1,103 @@
+package com.example.birdyapp.features.sign_in.view
+
+import android.content.Intent
+import android.os.Bundle
+import android.os.PersistableBundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
+import com.example.birdyapp.MainActivity
+import com.example.birdyapp.R
+import com.example.birdyapp.Repository
+import com.example.birdyapp.databinding.ActivitySignInBinding
+import com.example.birdyapp.extensions.makeLinks
+import com.example.birdyapp.features.sign_in.model.Credentials
+import com.example.birdyapp.features.sign_up.view.SignUpActivity
+import com.example.birdyapp.identity.CredentialsProvider
+import com.example.birdyapp.util.ActivitiesUtil
+import com.example.birdyapp.util.ToastManager
+import io.grpc.Channel
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import kotlinx.android.synthetic.main.activity_sign_in.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.closestKodein
+import org.kodein.di.generic.instance
+
+class SignInActivity : AppCompatActivity(), KodeinAware {
+    override val kodein by closestKodein()
+    private val credentialsProvider: CredentialsProvider by instance()
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private lateinit var channel: Channel
+    private val toastManager: ToastManager by instance()
+
+    val isLoading = MutableLiveData(false)
+
+    val fields: MutableMap<String, MutableLiveData<String>> = mutableMapOf(
+        "email" to MutableLiveData(),
+        "password" to MutableLiveData()
+    )
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+
+        val binding: ActivitySignInBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_sign_in)
+        binding.lifecycleOwner = this
+        channel = ActivitiesUtil.initChannel()
+        initButtons()
+        initFields()
+    }
+
+    private fun initButtons() {
+        login_button.setOnClickListener {
+
+            ActivitiesUtil.hideKeyboard(this)
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(fields["email"]?.value!!).matches()) {
+                emailInputLayout.error = resources.getString(R.string.error_invalid_email)
+            } else {
+                emailInputLayout.error = null
+            }
+            signIn(
+                fields["email"]?.value!!,
+                fields["password"]?.value!!
+            )
+        }
+    }
+
+    private fun initFields() {
+        dont_have_account_text_view.makeLinks(
+            Pair("Create one", View.OnClickListener {
+                startActivity(
+                    Intent(
+                        this,
+                        SignUpActivity::class.java
+                    )
+                )
+            })
+        )
+    }
+
+    private fun signIn(email: String, password: String) {
+        Repository(channel).loginUser(email, password)
+            .doOnSubscribe {
+                isLoading.postValue(true)
+            }
+            .doOnComplete {
+                isLoading.postValue(false)
+            }
+            .subscribe {
+                goToMainActivity()
+            }
+            .addTo(compositeDisposable)
+        credentialsProvider.setCredentials(Credentials(email, password))
+    }
+
+    private fun goToMainActivity() {
+        Intent(
+            this,
+            MainActivity::class.java
+        )
+    }
+}
