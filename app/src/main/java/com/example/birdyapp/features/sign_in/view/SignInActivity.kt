@@ -91,11 +91,21 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
             }
             .subscribe({
                 Log.d("res--", it.number.toString())
-                if(it.number == 0){
-                    goToMainActivity()
+                when (it.number) {
+                    0 -> {
+                        goToMainActivity()
+                    }
+                    1 -> {
+                        toastManager.short("Invalid password, try again!")
+                        progress_sign_in.visibility = View.GONE
+                    }
+                    2 -> {
+                        toastManager.short("User with this email was not found, try again!")
+                        progress_sign_in.visibility = View.GONE
+                    }
                 }
             }, {
-                toastManager.short("Error!")
+                toastManager.short("Something went wrong, try again!")
             })
 
             .addTo(compositeDisposable)

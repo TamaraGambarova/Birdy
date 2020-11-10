@@ -25,6 +25,8 @@ import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
 import com.example.birdyapp.features.searching_by_name.model.BirdModel
 import com.example.birdyapp.features.searching_by_name.view.adapters.BirdsAdapter
+import com.example.birdyapp.features.sign_in.view.SignInActivity
+import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.util.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -33,6 +35,8 @@ import com.theartofdev.edmodo.cropper.CropImage
 import io.grpc.Channel
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
+import kotlinx.android.synthetic.main.toolbar_with_image.*
+import kotlinx.android.synthetic.main.toolbar_with_image.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
@@ -43,6 +47,8 @@ import java.io.FileNotFoundException
 
 class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
+    private val credentialsProvider: CredentialsProvider by instance()
+
     private val toastManager: ToastManager by instance()
 
     private val cameraPermission = PermissionManager(Manifest.permission.CAMERA, 404)
@@ -79,6 +85,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         super.onActivityCreated(savedInstanceState)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             initButtons()
+            initToolbar()
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     }
@@ -93,6 +100,18 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                 requireActivity(),
                 this::toCapture
             ) { toastManager.short(R.string.grant_camera_permission) }
+        }
+    }
+
+    private fun initToolbar() {
+        toolbar_with_image.log_out_imageView.setOnClickListener {
+            credentialsProvider.setCredentials(null)
+            startActivity(
+                Intent(
+                    requireActivity(),
+                    SignInActivity::class.java
+                )
+            )
         }
     }
 

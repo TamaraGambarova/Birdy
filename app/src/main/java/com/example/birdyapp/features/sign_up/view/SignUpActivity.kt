@@ -106,11 +106,17 @@ class SignUpActivity : AppCompatActivity(), KodeinAware {
             }
             .subscribe({
                 Log.d("res--", it.number.toString())
-                if(it.number == 0) {
-                    goToMainActivity()
+                when (it.number) {
+                    0 -> {
+                        goToMainActivity()
+                    }
+                    1 -> {
+                        toastManager.short("This email is already taken, try again!")
+                        progress.visibility = View.GONE
+                    }
                 }
             }, {
-                toastManager.short("Error!")
+                toastManager.short("Something went wrong, try again!")
             })
 
             .addTo(compositeDisposable)

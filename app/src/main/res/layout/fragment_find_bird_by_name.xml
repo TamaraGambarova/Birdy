@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -24,16 +25,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/birdyLogo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="@dimen/standard_margin"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_bird_logo"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <include
+                    android:id="@+id/appbar"
+                    layout="@layout/appbar"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/birdNameLayout"
@@ -47,7 +41,7 @@
                     app:boxCornerRadiusTopEnd="10dp"
                     app:boxCornerRadiusTopStart="10dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/birdyLogo">
+                    app:layout_constraintTop_toBottomOf="@id/appbar">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/birdName"
