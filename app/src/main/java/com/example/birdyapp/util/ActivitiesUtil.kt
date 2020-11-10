@@ -18,7 +18,7 @@ object ActivitiesUtil {
 
     fun initChannel(): Channel {
         return ManagedChannelBuilder
-            .forAddress("178.150.141.36", 1488)
+            .forAddress("192.168.1.20", 1488)
             .usePlaintext()
             .build()
     }

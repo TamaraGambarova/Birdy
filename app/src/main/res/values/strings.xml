@@ -26,4 +26,5 @@
     <string name="sign_up_button_text">Sign up</string>
     <string name="already_have_account">Already have an account? Log in!</string>
     <string name="empty_fields">Fields must not be empty!</string>
+    <string name="home">Home</string>
 </resources>

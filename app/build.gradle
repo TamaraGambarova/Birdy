@@ -18,7 +18,9 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-
+        dataBinding {
+            enabled = true
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

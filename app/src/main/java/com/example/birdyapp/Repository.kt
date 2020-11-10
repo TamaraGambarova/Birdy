@@ -39,7 +39,7 @@ class Repository(private val channel: Channel) {
                     it.encInfo.photo.toByteArray()
                 )
             )
-            Log.d("ptenchick", it.encInfo.description)
+            Log.d("ptenchick", it.encInfo.photo.toByteArray().size.toString())
             Log.d("ptenchick", it.encInfo.name)
         }
         return matchedBirds.toSingle()
@@ -67,39 +67,43 @@ class Repository(private val channel: Channel) {
         Log.d("test-loc", response.birdName)
     }
 
-    fun loginUser(email: String, password: String): Completable {
-        val blockingStub = newBlockingStub(channel)
-        val loginRequest = Birdy.LoginRequest.newBuilder()
-            .setEmail(email)
-            .setPassword(password)
-            .build()
+    fun loginUser(email: String, password: String): Single<Birdy.LoginResponse.Result>  {
+        try {
+            val blockingStub = newBlockingStub(channel)
+            val loginRequest = Birdy.LoginRequest.newBuilder()
+                .setEmail(email)
+                .setPassword(password)
+                .build()
 
-        val response = blockingStub.loginUser(loginRequest)
+            val response = blockingStub.loginUser(loginRequest)
 
-        return response.result.toSingle().ignoreElement()
+            return response.result.toSingle()
+        } catch (e: Exception) {
+            e.printStackTrace()
+           return Single.error(e)
+        }
     }
 
-    fun registerUser(email: String, password: String, user: UserFields): Completable {
+    fun registerUser(email: String, password: String, user: UserFields): Single<Birdy.RegistrationResponse.Result> {
+        try {
+            val blockingStub = newBlockingStub(channel)
 
-        val blockingStub = newBlockingStub(channel)
+            val request = Birdy.RegistrationRequest.newBuilder()
+                .setEmail(email)
+                .setPassword(password)
+                .setFirstName(user.firstName.value)
+                .setLastName(user.lastName.value)
+                .setMiddleName(user.middleName.value)
+                .setCity(user.city.value)
+                .setBirthDate(user.birthdayDate.value.toString())
+                .build()
 
-        val request = Birdy.RegistrationRequest.newBuilder()
-            .setEmail(email)
-            .setPassword(password)
-            .setFirstName(user.firstName.value)
-            .setLastName(user.lastName.value)
-            .setMiddleName(user.middleName.value)
-            .setCity(user.city.value)
-            .setBirthDate(
-                SimpleDateFormat(
-                    "dd-MMM-yyyy",
-                    Locale.ENGLISH
-                ).format(user.birthdayDate)
-            )
-            .build()
+            val response = blockingStub.registerUser(request)
+            return response.result.toSingle()
 
-        val response = blockingStub.registerUser(request)
-
-        return response.result.toSingle().ignoreElement()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Single.error(e)
+        }
     }
 }

@@ -32,6 +32,7 @@ class OfflineBirdsAdapter:
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: OfflineBirdsModel) {
+
             binding.description = item.lat.toString() + ":" + item.longitude
             binding.birdPhoto.setImageURI(Uri.parse(item.photo))
         }

@@ -3,6 +3,7 @@ package com.example.birdyapp.features.sign_in.view
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -21,6 +22,8 @@ import io.grpc.Channel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import kotlinx.android.synthetic.main.activity_sign_in.emailInputLayout
+import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
@@ -39,12 +42,14 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
         "password" to MutableLiveData()
     )
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         val binding: ActivitySignInBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_sign_in)
         binding.lifecycleOwner = this
+        binding.activity = this
+
         channel = ActivitiesUtil.initChannel()
         initButtons()
         initFields()
@@ -68,7 +73,7 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
 
     private fun initFields() {
         dont_have_account_text_view.makeLinks(
-            Pair("Create one", View.OnClickListener {
+            Pair("Create one!", View.OnClickListener {
                 startActivity(
                     Intent(
                         this,
@@ -82,22 +87,25 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
     private fun signIn(email: String, password: String) {
         Repository(channel).loginUser(email, password)
             .doOnSubscribe {
-                isLoading.postValue(true)
+                progress_sign_in.visibility = View.VISIBLE
             }
-            .doOnComplete {
-                isLoading.postValue(false)
-            }
-            .subscribe {
-                goToMainActivity()
-            }
+            .subscribe({
+                Log.d("res--", it.number.toString())
+                if(it.number == 0){
+                    goToMainActivity()
+                }
+            }, {
+                toastManager.short("Error!")
+            })
+
             .addTo(compositeDisposable)
         credentialsProvider.setCredentials(Credentials(email, password))
     }
 
     private fun goToMainActivity() {
-        Intent(
+        startActivity( Intent(
             this,
             MainActivity::class.java
-        )
+        ))
     }
 }

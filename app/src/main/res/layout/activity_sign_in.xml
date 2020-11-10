@@ -17,7 +17,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/progress_qr_overlay"
+            android:id="@+id/progress_sign_in"
             isVisible="@{activity.isLoading()}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

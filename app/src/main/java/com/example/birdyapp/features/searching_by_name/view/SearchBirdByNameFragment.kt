@@ -60,7 +60,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var birdImageFile: File
-    val isLoading = MutableLiveData<Boolean>(false)
+    val isLoading = MutableLiveData(false)
 
     val birdName = MutableLiveData<String>()
 
@@ -103,15 +103,16 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                 Repository(channel).findBirdByName(birdNameLayout.editText?.text.toString())
                     .compose(ObservableTransformers.defaultSchedulersSingle())
                     .doOnSubscribe {
-                        isLoading.postValue(true)
+                        progress.visibility = View.VISIBLE
                     }
                     .doOnEvent { _, _ ->
-                        isLoading.postValue(false)
+                        progress.visibility = View.GONE
                     }
                     .subscribeBy({
                         fillBirdsRecyclerView(it)
                     })
             } catch (e: Exception) {
+                e.printStackTrace()
                 toastManager.long("Something went wrong, try again")
             }
         } else {
@@ -122,7 +123,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private fun fillBirdsRecyclerView(list: List<BirdModel>) {
         with(birdsRecycler) {
             layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = birdsAdapter
             birdsAdapter.replace(list)
         }
@@ -221,13 +222,13 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
 
                         val bm: Bitmap = BitmapFactory.decodeStream(fis)
                         val baos = ByteArrayOutputStream()
-                        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                        val b: ByteArray = baos.toByteArray()
+                        bm.compress(Bitmap.CompressFormat.PNG, 0, baos)
+                        val b = baos.toByteArray()
                         Repository(channel).setBirdLocation(
                             photo = ByteString.copyFrom(b),
                             lat = currentLocation.latitude,
                             long = currentLocation.longitude,
-                            finder = "test@gmail.com"
+                            finder = "gambarova.tamara@gmail.com"
                         )
                     }
                 }
