@@ -23,17 +23,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/birdyLogo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="@dimen/standard_margin"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_bird_logo"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
                 <ImageButton
                     android:id="@+id/uploadBtn"
                     android:layout_width="50dp"
@@ -44,7 +33,7 @@
                     android:src="@drawable/ic_upload_icon"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/birdyLogo" />
+                    app:layout_constraintTop_toTopOf="parent"/>
                 <ImageView
                     android:id="@+id/testImg"
                     android:layout_width="256dp"
@@ -52,9 +41,10 @@
                     android:layout_marginTop="@dimen/standard_margin"
                     app:layout_constraintTop_toBottomOf="@id/uploadBtn"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="gone"/>
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/birdsRecycler"
+                    android:id="@+id/birds_offline_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/testImg"
