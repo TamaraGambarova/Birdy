@@ -3,9 +3,12 @@ package com.example.birdyapp.features.searching_by_name.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.net.Uri
 import android.os.Build
@@ -20,13 +23,11 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
 import com.example.birdyapp.features.searching_by_name.model.BirdModel
 import com.example.birdyapp.features.searching_by_name.view.adapters.BirdsAdapter
-import com.example.birdyapp.features.sign_in.view.SignInActivity
 import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.util.*
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -36,8 +37,6 @@ import com.theartofdev.edmodo.cropper.CropImage
 import io.grpc.Channel
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
-import kotlinx.android.synthetic.main.toolbar_with_image.*
-import kotlinx.android.synthetic.main.toolbar_with_image.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
@@ -93,8 +92,17 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initButtons() {
         searchBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            val view = layoutInflater.inflate(R.layout.layout_processing_dialog, null)
 
+            builder.setView(view)
+            builder.setCustomTitle(null)
+
+            val dialog: AlertDialog = builder.create()
+
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             searchByName()
+            dialog.hide()
         }
         uploadBtn.setOnClickListener {
             cameraPermission.check(
@@ -106,11 +114,14 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun searchByName() {
-        if (validate(birdNameLayout.editText?.text.toString().trim())) {
-            progress.visibility = View.VISIBLE
+        progress.visibility = View.VISIBLE
+
+
+        if (validate(birdNameLayout.editText?.text.toString().trimStart())) {
             try {
                 Repository(channel).findBirdByName(birdNameLayout.editText?.text.toString())
                     .compose(ObservableTransformers.defaultSchedulersSingle())
+
                     .subscribeBy({
                         fillBirdsRecyclerView(it)
                     })
@@ -128,7 +139,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         with(birdsRecycler) {
             layoutManager =
                 GridLayoutManager(requireContext(), 2)
-                //LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            //LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = birdsAdapter
             birdsAdapter.replace(list)
         }

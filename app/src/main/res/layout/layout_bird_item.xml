@@ -37,10 +37,14 @@
 
             <TextView
                 android:id="@+id/birdName"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/half_standard_margin"
+                android:layout_marginBottom="@dimen/half_standard_margin"
                 android:text="@{bird.name}"
+                android:textColor="@android:color/black"
+                android:gravity="center|center_vertical"
                 android:textSize="20sp"
                 android:textStyle="normal|bold"
                 tools:text="ptenchik" />

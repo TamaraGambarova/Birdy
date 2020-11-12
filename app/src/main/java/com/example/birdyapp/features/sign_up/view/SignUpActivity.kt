@@ -11,7 +11,9 @@ import com.example.birdyapp.MainActivity
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.ActivitySignUpBinding
+import com.example.birdyapp.features.sign_in.model.Credentials
 import com.example.birdyapp.features.sign_up.model.UserFields
+import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.util.ActivitiesUtil
 import com.example.birdyapp.util.ObservableTransformers
 import com.example.birdyapp.util.ToastManager
@@ -28,6 +30,7 @@ import org.kodein.di.generic.instance
 class SignUpActivity : AppCompatActivity(), KodeinAware {
     override val kodein by closestKodein()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private val credentialsProvider: CredentialsProvider by instance()
     private lateinit var channel: Channel
     private val toastManager: ToastManager by instance()
 
@@ -39,6 +42,7 @@ class SignUpActivity : AppCompatActivity(), KodeinAware {
 
     private val fragmentDisplayer =
         UserFlowFragmentDisplayer(this, R.id.fragment_container)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -131,6 +135,7 @@ class SignUpActivity : AppCompatActivity(), KodeinAware {
                 Log.d("res--", it.number.toString())
                 when (it.number) {
                     0 -> {
+                        credentialsProvider.setCredentials(Credentials(email, password))
                         goToMainActivity()
                     }
                     1 -> {

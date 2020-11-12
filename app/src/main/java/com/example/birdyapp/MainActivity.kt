@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity(), KodeinAware {
     }
 
     private fun initToolbar() {
+        toolbar_with_image.title_text_view.text = getString(R.string.search)
         toolbar_with_image.log_out_imageView.setOnClickListener {
             credentialsProvider.setCredentials(null)
             startActivity(
