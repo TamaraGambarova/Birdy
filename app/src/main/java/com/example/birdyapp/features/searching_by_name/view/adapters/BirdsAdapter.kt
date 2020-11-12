@@ -40,7 +40,7 @@ class BirdsAdapter :
             val bmp = Bitmap.createBitmap(10000, 10000, Bitmap.Config.ARGB_8888)
             //val buffer: ByteBuffer = ByteBuffer.wrap(item.photo)
             //bmp.copyPixelsFromBuffer(buffer)
-            val bmp_ = BitmapFactory.decodeByteArray(item.photo, 0, item.photo.size*2)
+            val bmp_ = BitmapFactory.decodeByteArray(item.photo, 0, item.photo.size)
 
             binding.bird = item
             binding.birdPhoto.setImageBitmap(bmp_)

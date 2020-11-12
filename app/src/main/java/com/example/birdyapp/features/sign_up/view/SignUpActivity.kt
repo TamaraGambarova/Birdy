@@ -16,6 +16,7 @@ import com.example.birdyapp.extensions.makeLinks
 import com.example.birdyapp.features.sign_in.view.SignInActivity
 import com.example.birdyapp.features.sign_up.model.UserFields
 import com.example.birdyapp.util.ActivitiesUtil
+import com.example.birdyapp.util.ConnectivityInterceptor
 import com.example.birdyapp.util.ObservableTransformers
 import com.example.birdyapp.util.ToastManager
 import io.grpc.Channel
@@ -49,10 +50,21 @@ class SignUpActivity : AppCompatActivity(), KodeinAware {
 
     private fun initButtons() {
         sign_up_button.setOnClickListener {
-            if (userForm.validate()) {
-                signUp()
+            if (ConnectivityInterceptor.isOnline(this)) {
+
+                when {
+                    userForm.password.value != userForm.passwordRepeated.value -> {
+                        toastManager.short(R.string.passwords_do_not_match)
+                    }
+                    userForm.validate() -> {
+                        signUp()
+                    }
+                    else -> {
+                        toastManager.short(R.string.empty_fields)
+                    }
+                }
             } else {
-                toastManager.short(R.string.empty_fields)
+                toastManager.short(R.string.no_connection)
             }
         }
     }
@@ -123,9 +135,11 @@ class SignUpActivity : AppCompatActivity(), KodeinAware {
     }
 
     private fun goToMainActivity() {
-        startActivity( Intent(
-            this,
-            MainActivity::class.java
-        ))
+        startActivity(
+            Intent(
+                this,
+                MainActivity::class.java
+            )
+        )
     }
 }

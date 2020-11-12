@@ -29,4 +29,6 @@
     <string name="already_have_account">Already have an account? Log in!</string>
     <string name="empty_fields">Fields must not be empty!</string>
     <string name="home">Home</string>
+    <string name="passwords_do_not_match">"Passwords don't match! "</string>
+    <string name="no_connection">No internet connection! Try again later!</string>
 </resources>

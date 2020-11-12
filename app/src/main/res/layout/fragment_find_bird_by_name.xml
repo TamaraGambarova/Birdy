@@ -25,9 +25,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <include
-                    android:id="@+id/appbar"
-                    layout="@layout/appbar"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/birdNameLayout"
@@ -41,7 +38,7 @@
                     app:boxCornerRadiusTopEnd="10dp"
                     app:boxCornerRadiusTopStart="10dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/appbar">
+                    app:layout_constraintTop_toTopOf="parent" >
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/birdName"
@@ -80,7 +77,8 @@
                     android:layout_marginTop="@dimen/standard_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/uploadBtn" />
+                    app:layout_constraintTop_toBottomOf="@id/uploadBtn"
+                    android:visibility="gone"/>
 
 
                 <TextView
@@ -127,7 +125,6 @@
 
         <LinearLayout
             android:id="@+id/progress"
-            isVisible="@{fragment.isLoading()}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"

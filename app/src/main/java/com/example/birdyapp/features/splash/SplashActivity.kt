@@ -33,6 +33,8 @@ class SplashActivity : AppCompatActivity(), KodeinAware {
                                 MainActivity::class.java
                             )
                         )
+                        finish()
+
                     } else {
                         startActivity(
                             Intent(
@@ -40,6 +42,8 @@ class SplashActivity : AppCompatActivity(), KodeinAware {
                                 SignInActivity::class.java
                             )
                         )
+                        finish()
+
                     }
                 }
             }

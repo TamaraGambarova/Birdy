@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
@@ -85,7 +86,6 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         super.onActivityCreated(savedInstanceState)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             initButtons()
-            initToolbar()
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     }
@@ -93,6 +93,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initButtons() {
         searchBtn.setOnClickListener {
+
             searchByName()
         }
         uploadBtn.setOnClickListener {
@@ -103,30 +104,13 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         }
     }
 
-    private fun initToolbar() {
-        toolbar_with_image.log_out_imageView.setOnClickListener {
-            credentialsProvider.setCredentials(null)
-            startActivity(
-                Intent(
-                    requireActivity(),
-                    SignInActivity::class.java
-                )
-            )
-        }
-    }
-
     @RequiresApi(Build.VERSION_CODES.N)
     private fun searchByName() {
-        if (validate(birdNameLayout.editText?.text.toString())) {
+        if (validate(birdNameLayout.editText?.text.toString().trim())) {
+            progress.visibility = View.VISIBLE
             try {
                 Repository(channel).findBirdByName(birdNameLayout.editText?.text.toString())
                     .compose(ObservableTransformers.defaultSchedulersSingle())
-                    .doOnSubscribe {
-                        progress.visibility = View.VISIBLE
-                    }
-                    .doOnEvent { _, _ ->
-                        progress.visibility = View.GONE
-                    }
                     .subscribeBy({
                         fillBirdsRecyclerView(it)
                     })
@@ -137,12 +121,14 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         } else {
             toastManager.long("Incorrect bird name, try again")
         }
+        progress.visibility = View.GONE
     }
 
     private fun fillBirdsRecyclerView(list: List<BirdModel>) {
         with(birdsRecycler) {
             layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                GridLayoutManager(requireContext(), 2)
+                //LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = birdsAdapter
             birdsAdapter.replace(list)
         }
@@ -241,8 +227,9 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
 
                         val bm: Bitmap = BitmapFactory.decodeStream(fis)
                         val baos = ByteArrayOutputStream()
-                        bm.compress(Bitmap.CompressFormat.PNG, 0, baos)
+                        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                         val b = baos.toByteArray()
+                        Log.d("initial-size", ByteString.copyFrom(b).size().toString())
                         Repository(channel).setBirdLocation(
                             photo = ByteString.copyFrom(b),
                             lat = currentLocation.latitude,

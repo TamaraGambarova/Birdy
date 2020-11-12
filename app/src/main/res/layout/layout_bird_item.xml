@@ -27,22 +27,26 @@
 
             <ImageView
                 android:id="@+id/birdPhoto"
-                android:layout_width="128dp"
+                android:layout_width="160dp"
                 android:layout_height="128dp"
                 android:layout_marginStart="@dimen/standard_margin"
                 android:layout_marginEnd="@dimen/standard_margin"
                 android:layout_marginTop="@dimen/standard_margin"
+                android:scaleType="centerCrop"
                 tools:background="@drawable/ic_launcher_background"/>
 
 
             <TextView
                 android:id="@+id/birdName"
-                android:layout_width="wrap_content"
+                android:layout_width="128dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:layout_gravity="center"
                 android:textStyle="bold"
-                android:textSize="24sp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
                 android:text="@{bird.name}"
+                android:gravity="center"
                 tools:text="ptenchik"/>
 
         </LinearLayout>
