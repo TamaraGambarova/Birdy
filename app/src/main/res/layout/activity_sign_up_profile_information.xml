@@ -192,13 +192,15 @@
                         android:textColor="@drawable/picker_text_color" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/cityLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="27dp"
-                    android:layout_marginTop="@dimen/standard_padding"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="27dp"
                     android:elevation="4dp"
                     android:hint="@string/city_hint"
@@ -208,6 +210,7 @@
                     app:boxCornerRadiusTopStart="10dp"
                     app:hintEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/birthDayDateInputLayout">
 
@@ -219,7 +222,6 @@
                         android:text='@={activity.userForm.city}' />
 
                 </com.google.android.material.textfield.TextInputLayout>
-
 
                 <Button
                     android:id="@+id/sign_up_button"
@@ -235,7 +237,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    tools:layout_editor_absoluteY="637dp" />
+                    tools:layout_editor_absoluteY="577dp" />
 
                 <TextView
                     android:id="@+id/already_have_account_text_view"
@@ -246,8 +248,10 @@
                     android:textColorLink="@color/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.502"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sign_up_button" />
+                    app:layout_constraintTop_toBottomOf="@id/sign_up_button"
+                    app:layout_constraintVertical_bias="0.106" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </RelativeLayout>
