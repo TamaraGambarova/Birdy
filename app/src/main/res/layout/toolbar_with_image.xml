@@ -46,13 +46,14 @@
 
         <ImageView
             android:id="@+id/setting_imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/ic_settings_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/log_out_imageView"
             app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/log_out_imageView"
             android:layout_width="wrap_content"
