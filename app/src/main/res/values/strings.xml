@@ -11,6 +11,7 @@
     <string name="canceled">Canceled</string>
     <string name="grant_location_permission">Please grant your location permission</string>
     <string name="login_welcome">Sign In</string>
+    <string name="next_sign_up_button">Continue</string>
     <string name="signup_title_text">Sign Up</string>
     <string name="copyrights">© 2020 Birdy Inc. All Rights Reserved</string>
     <string name="email_hint">Email</string>
