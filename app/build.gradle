@@ -117,4 +117,7 @@ dependencies {
 
     //photo cropper
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
+    implementation 'org.jetbrains.anko:anko-sdk15:0.9.1'
+
 }

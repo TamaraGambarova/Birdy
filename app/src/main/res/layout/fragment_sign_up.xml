@@ -9,42 +9,15 @@
         <import type="androidx.lifecycle.MutableLiveData" />
 
         <variable
-            name="activity"
-            type="com.example.birdyapp.features.sign_up.view.SignUpActivity" />
+            name="fragment"
+            type="com.example.birdyapp.features.sign_up.view.MainSignUpDataFragment"/>
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/progress"
-            isVisible="@{activity.isLoading()}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <ProgressBar
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="visible" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_margin"
-                android:text="@string/processing_progress"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
         <androidx.core.widget.NestedScrollView
-            isVisible="@{!activity.isLoading()}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
@@ -80,16 +53,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/logo_image_view" />
 
+
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/firstNameInputLayout"
+                    android:id="@+id/emailInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="27dp"
-                    android:layout_marginTop="@dimen/standard_padding"
+                    android:layout_marginTop="@dimen/double_margin"
                     android:layout_marginEnd="27dp"
                     android:elevation="4dp"
-                    android:hint="@string/first_name_hint"
+                    android:hint="@string/email_hint"
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
@@ -100,16 +74,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/signup_title_text_view">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edittext_first_name"
+
+                        android:id="@+id/edittext_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:text='@={activity.userForm.firstName}' />
+                        android:inputType="textEmailAddress"
+                        android:text='@={fragment.fields["email"]}' />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/lastNameInputLayout"
+                    android:id="@+id/passwordInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -117,7 +93,7 @@
                     android:layout_marginTop="@dimen/standard_margin"
                     android:layout_marginEnd="27dp"
                     android:elevation="4dp"
-                    android:hint="@string/last_name_hint"
+                    android:hint="@string/password_hint"
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
@@ -125,18 +101,19 @@
                     app:hintEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/firstNameInputLayout">
+                    app:layout_constraintTop_toBottomOf="@+id/emailInputLayout"
+                    app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edittext_last_name"
+                        android:id="@+id/edittext_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:text='@={activity.userForm.lastName}' />
+                        android:inputType="textPassword"
+                        android:text='@={fragment.fields["password"]}' />
 
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/middleNameInputLayout"
+                    android:id="@+id/passwordRepeatedInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -144,7 +121,7 @@
                     android:layout_marginTop="@dimen/standard_margin"
                     android:layout_marginEnd="27dp"
                     android:elevation="4dp"
-                    android:hint="@string/middle_name_hint"
+                    android:hint="@string/password_repeated_hint"
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
@@ -152,92 +129,32 @@
                     app:hintEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lastNameInputLayout">
+                    app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout"
+                    app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edittext_middle_name"
+                        android:id="@+id/edittext_passwordRepeated"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:text='@={activity.userForm.middleName}' />
+                        android:inputType="textPassword"
+                        android:text='@={fragment.fields["confirm_password"]}' />
 
                 </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/birthDayDateInputLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="27dp"
-                    android:layout_marginTop="@dimen/standard_margin"
-                    android:layout_marginEnd="27dp"
-                    android:elevation="4dp"
-                    android:focusable="false"
-                    android:hint="@string/date_of_birth_hint"
-                    app:boxCornerRadiusBottomEnd="10dp"
-                    app:boxCornerRadiusBottomStart="10dp"
-                    app:boxCornerRadiusTopEnd="10dp"
-                    app:boxCornerRadiusTopStart="10dp"
-                    app:hintEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/middleNameInputLayout">
-
-                    <AutoCompleteTextView
-                        shortDate="@{activity.userForm.birthdayDate}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:enabled="false"
-                        android:inputType="none"
-                        android:textColor="@drawable/picker_text_color" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/cityLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="27dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="27dp"
-                    android:elevation="4dp"
-                    android:hint="@string/city_hint"
-                    app:boxCornerRadiusBottomEnd="10dp"
-                    app:boxCornerRadiusBottomStart="10dp"
-                    app:boxCornerRadiusTopEnd="10dp"
-                    app:boxCornerRadiusTopStart="10dp"
-                    app:hintEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/birthDayDateInputLayout">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edittext_city"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:text='@={activity.userForm.city}' />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <Button
-                    android:id="@+id/sign_up_button"
+                    android:id="@+id/next_sign_up_button"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginStart="27dp"
+                    android:layout_marginTop="@dimen/double_margin"
                     android:layout_marginEnd="27dp"
                     android:background="@drawable/background_button"
                     android:elevation="2dp"
-                    android:text="@string/sign_up_button_text"
+                    android:text="@string/next_sign_up_button"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    tools:layout_editor_absoluteY="577dp" />
+                    app:layout_constraintTop_toBottomOf="@id/passwordRepeatedInputLayout" />
 
                 <TextView
                     android:id="@+id/already_have_account_text_view"
@@ -248,10 +165,10 @@
                     android:textColorLink="@color/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sign_up_button"
-                    app:layout_constraintVertical_bias="0.106" />
+                    app:layout_constraintTop_toBottomOf="@id/next_sign_up_button"
+                    app:layout_constraintVertical_bias="0.08" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </RelativeLayout>
