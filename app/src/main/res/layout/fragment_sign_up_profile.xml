@@ -9,42 +9,16 @@
         <import type="androidx.lifecycle.MutableLiveData" />
 
         <variable
-            name="activity"
-            type="com.example.birdyapp.features.sign_up.view.SignUpActivity" />
+            name="fragment"
+            type="com.example.birdyapp.features.sign_up.view.UserProfileFragment" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/progress"
-            isVisible="@{activity.isLoading()}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <ProgressBar
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="visible" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_margin"
-                android:text="@string/processing_progress"
-                android:textSize="18sp" />
-
-        </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
-            isVisible="@{!activity.isLoading()}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
@@ -57,18 +31,18 @@
                     android:id="@+id/logo_image_view"
                     android:layout_width="112dp"
                     android:layout_height="90dp"
-                    android:layout_marginStart="148dp"
-                    android:layout_marginTop="44dp"
+                    android:layout_marginStart="140dp"
+                    android:layout_marginTop="40dp"
                     android:src="@drawable/ic_bird_logo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/signup_title_text_view"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="276dp"
+                    android:layout_height="47dp"
                     android:layout_marginStart="27dp"
-                    android:layout_marginTop="51dp"
+                    android:layout_marginTop="48dp"
                     android:layout_marginEnd="27dp"
                     android:fontFamily="sans-serif"
                     android:text="@string/signup_title_text"
@@ -77,7 +51,21 @@
                     android:textSize="36sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.592"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/logo_image_view" />
+
+                <ImageButton
+                    android:id="@+id/returnBtn"
+                    android:layout_width="56dp"
+                    android:layout_height="47dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginEnd="336dp"
+                    android:background="@drawable/transparent_background_button"
+                    android:src="@drawable/ic_return"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/logo_image_view" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -86,7 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="27dp"
-                    android:layout_marginTop="@dimen/standard_padding"
+                    android:layout_marginTop="@dimen/double_margin"
                     android:layout_marginEnd="27dp"
                     android:elevation="4dp"
                     android:hint="@string/first_name_hint"
@@ -96,15 +84,16 @@
                     app:boxCornerRadiusTopStart="10dp"
                     app:hintEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/signup_title_text_view">
+                    app:layout_constraintTop_toBottomOf="@+id/returnBtn">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edittext_first_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords"
-                        android:text='@={activity.userForm.firstName}' />
+                        android:text='@={fragment.userForm.firstName}' />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,9 +121,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords"
-                        android:text='@={activity.userForm.lastName}' />
+                        android:text='@={fragment.userForm.lastName}' />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/middleNameInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -159,9 +149,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords"
-                        android:text='@={activity.userForm.middleName}' />
+                        android:text='@={fragment.userForm.middleName}' />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/birthDayDateInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -183,7 +174,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/middleNameInputLayout">
 
                     <AutoCompleteTextView
-                        shortDate="@{activity.userForm.birthdayDate}"
+                        shortDate="@{fragment.userForm.birthdayDate}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:editable="false"
@@ -219,7 +210,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords"
-                        android:text='@={activity.userForm.city}' />
+                        android:text='@={fragment.userForm.city}' />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -228,6 +219,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginStart="27dp"
+                    android:layout_marginTop="32dp"
                     android:layout_marginEnd="27dp"
                     android:background="@drawable/background_button"
                     android:elevation="2dp"
@@ -235,23 +227,10 @@
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cityLayout"
                     tools:layout_editor_absoluteY="577dp" />
 
-                <TextView
-                    android:id="@+id/already_have_account_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/already_have_account"
-                    android:textColor="@android:color/black"
-                    android:textColorLink="@color/colorPrimary"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.502"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sign_up_button"
-                    app:layout_constraintVertical_bias="0.106" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </RelativeLayout>
