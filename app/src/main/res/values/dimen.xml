@@ -19,7 +19,7 @@
     <dimen name="quadra_margin">64dp</dimen>
     <dimen name="triple_margin">48dp</dimen>
     <dimen name="double_margin">32dp</dimen>
-    <dimen name="standard_margin">16dp</dimen>
+    <dimen name="standard_margin">5dp</dimen>
     <dimen name="half_standard_margin">8dp</dimen>
     <dimen name="quarter_standard_margin">4dp</dimen>
     <dimen name="one_and_a_half_margin">24dp</dimen>
