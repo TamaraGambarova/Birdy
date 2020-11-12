@@ -61,10 +61,10 @@
         <TextView
             android:id="@+id/textView4"
             android:layout_width="264dp"
-            android:layout_height="47dp"
+            android:layout_height="55dp"
             android:text="Choose what you want to upload:"
             android:textAlignment="center"
-            android:textSize="18sp"
+            android:textSize="22sp"
             android:translationX="70dp"
             android:translationY="300dp" />
 
