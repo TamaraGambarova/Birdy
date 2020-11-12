@@ -1,5 +1,6 @@
 package com.example.birdyapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -9,14 +10,25 @@ import com.example.birdyapp.databinding.ActivityMainBinding
 import com.example.birdyapp.features.messages.MessagesFragment
 import com.example.birdyapp.features.searching_by_name.view.OfflineFragment
 import com.example.birdyapp.features.searching_by_name.view.SearchBirdByNameFragment
+import com.example.birdyapp.features.sign_in.view.SignInActivity
 import com.example.birdyapp.features.top.TopFragment
+import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.util.ActivitiesUtil.initChannel
 import io.grpc.Channel
 import io.grpc.ManagedChannel
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.toolbar_with_image.*
+import kotlinx.android.synthetic.main.toolbar_with_image.view.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.closestKodein
+import org.kodein.di.android.x.closestKodein
+import org.kodein.di.generic.instance
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), KodeinAware {
+    override val kodein by closestKodein()
+
     private lateinit var binding: ActivityMainBinding
+    private val credentialsProvider: CredentialsProvider by instance()
 
     private lateinit var channel: Channel
 
@@ -28,13 +40,20 @@ class MainActivity : AppCompatActivity() {
         channel = initChannel()
 
         initBottomNavBar()
+        initToolbar()
+    }
 
-
-        /*  registerBtn.setOnClickListener {
-              GlobalScope.launch(Dispatchers.IO) {
-                  Repository(channel).registerUser()
-              }
-          }*/
+    private fun initToolbar() {
+        toolbar_with_image.log_out_imageView.setOnClickListener {
+            credentialsProvider.setCredentials(null)
+            startActivity(
+                Intent(
+                    this,
+                    SignInActivity::class.java
+                )
+            )
+            finish()
+        }
     }
 
     private fun initBottomNavBar() {

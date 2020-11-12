@@ -6,15 +6,11 @@ import androidx.annotation.RequiresApi
 import birdy_grpc.Birdy
 import birdy_grpc.MainEndpointGrpc.newBlockingStub
 import com.example.birdyapp.features.searching_by_name.model.BirdModel
-import com.example.birdyapp.features.sign_up.model.User
 import com.example.birdyapp.features.sign_up.model.UserFields
 import com.google.protobuf.ByteString
-
 import io.grpc.Channel
-import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toSingle
-import java.text.SimpleDateFormat
 import java.util.*
 
 class Repository(private val channel: Channel) {
@@ -68,7 +64,7 @@ class Repository(private val channel: Channel) {
     }
 
     fun loginUser(email: String, password: String): Single<Birdy.LoginResponse.Result>  {
-        try {
+        return try {
             val blockingStub = newBlockingStub(channel)
             val loginRequest = Birdy.LoginRequest.newBuilder()
                 .setEmail(email)
@@ -77,10 +73,10 @@ class Repository(private val channel: Channel) {
 
             val response = blockingStub.loginUser(loginRequest)
 
-            return response.result.toSingle()
+            response.result.toSingle()
         } catch (e: Exception) {
             e.printStackTrace()
-           return Single.error(e)
+            Single.error(e)
         }
     }
 

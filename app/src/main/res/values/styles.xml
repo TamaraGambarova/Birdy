@@ -27,4 +27,9 @@
         <item name="elevation">0dp</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>
+
+    <style name="PrimaryText">
+        <item name="android:textSize">@dimen/text_size_lead</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 </resources>

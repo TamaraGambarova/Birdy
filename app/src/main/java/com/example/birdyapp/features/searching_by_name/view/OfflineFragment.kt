@@ -21,6 +21,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.birdyapp.R
 import com.example.birdyapp.databinding.FragmentOfflineBirdsBinding
@@ -238,7 +239,9 @@ class OfflineFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     private fun initRecyclerView(items: List<OfflineBirdsModel>) {
 
         birds_offline_recycler.apply {
-            layoutManager = LinearLayoutManager(this@OfflineFragment.context)
+            layoutManager =
+                GridLayoutManager(requireContext(), 2)
+               // LinearLayoutManager(this@OfflineFragment.context)
             adapter = birdsAdapter
         }
         birdsAdapter.replace(items)
