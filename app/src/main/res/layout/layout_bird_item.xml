@@ -18,7 +18,7 @@
         android:layout_marginEnd="@dimen/default_horizontal_margin"
         android:layout_marginBottom="@dimen/standard_margin"
         android:elevation="4dp"
-        app:cardCornerRadius="12dp">
+        app:cardCornerRadius="7dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -27,27 +27,24 @@
 
             <ImageView
                 android:id="@+id/birdPhoto"
-                android:layout_width="160dp"
+                android:layout_width="140dp"
                 android:layout_height="128dp"
                 android:layout_marginStart="@dimen/standard_margin"
                 android:layout_marginEnd="@dimen/standard_margin"
                 android:layout_marginTop="@dimen/standard_margin"
-                android:scaleType="centerCrop"
                 tools:background="@drawable/ic_launcher_background"/>
 
 
             <TextView
                 android:id="@+id/birdName"
-                android:layout_width="128dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:fontFamily="@font/amiko"
                 android:text="@{bird.name}"
-                android:gravity="center"
-                tools:text="ptenchik"/>
+                android:textSize="20sp"
+                android:textStyle="normal|bold"
+                tools:text="ptenchik" />
 
         </LinearLayout>
 

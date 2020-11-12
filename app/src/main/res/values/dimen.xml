@@ -8,7 +8,7 @@
     <dimen name="text_size_amount_input">32sp</dimen>
     <dimen name="text_size_default">14sp</dimen>
     <dimen name="text_size_order_book">13sp</dimen>
-    <dimen name="text_size_heading">20sp</dimen>
+    <dimen name="text_size_heading">24sp</dimen>
     <dimen name="text_size_heading_large">32sp</dimen>
     <dimen name="text_size_amount_input_small">22sp</dimen>
 
@@ -19,7 +19,7 @@
     <dimen name="quadra_margin">64dp</dimen>
     <dimen name="triple_margin">48dp</dimen>
     <dimen name="double_margin">32dp</dimen>
-    <dimen name="standard_margin">16dp</dimen>
+    <dimen name="standard_margin">5dp</dimen>
     <dimen name="half_standard_margin">8dp</dimen>
     <dimen name="quarter_standard_margin">4dp</dimen>
     <dimen name="one_and_a_half_margin">24dp</dimen>
@@ -44,7 +44,7 @@
 
     <dimen name="impressive_card_elevation">6dp</dimen>
 
-    <dimen name="default_horizontal_margin">27dp</dimen>
+    <dimen name="default_horizontal_margin">20dp</dimen>
     <dimen name="design_bottom_navigation_height" tools:override="true">70dp</dimen>
     <item format="float" name="mtrl_snackbar_action_text_color_alpha" type="dimen" tools:override="true">1</item>
     <dimen name="design_bottom_navigation_active_text_size" tools:override="true">12sp</dimen>
