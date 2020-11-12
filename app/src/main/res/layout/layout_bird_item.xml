@@ -40,10 +40,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:textStyle="bold"
-                android:textSize="22sp"
+                android:fontFamily="@font/amiko"
                 android:text="@{bird.name}"
-                tools:text="ptenchik"/>
+                android:textSize="20sp"
+                android:textStyle="normal|bold"
+                tools:text="ptenchik" />
 
         </LinearLayout>
 
