@@ -75,6 +75,9 @@ class UserProfileFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun initButtons() {
+        returnBtn.setOnClickListener {
+            fragmentManager?.popBackStack()
+        }
         sign_up_button.setOnClickListener {
             if (userForm.validate()) {
                 resultSubject.onNext(

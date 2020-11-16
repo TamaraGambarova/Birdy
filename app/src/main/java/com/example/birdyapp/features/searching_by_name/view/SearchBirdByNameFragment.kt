@@ -92,17 +92,9 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initButtons() {
         searchBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            val view = layoutInflater.inflate(R.layout.layout_processing_dialog, null)
 
-            builder.setView(view)
-            builder.setCustomTitle(null)
-
-            val dialog: AlertDialog = builder.create()
-
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             searchByName()
-            dialog.hide()
+            //dialog.hide()
         }
         uploadBtn.setOnClickListener {
             cameraPermission.check(
