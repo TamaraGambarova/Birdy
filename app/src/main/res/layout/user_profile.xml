@@ -15,6 +15,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/fullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Daniel Malone"
+        android:textColor="#000"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profilePhoto" />
 
     <View
         android:id="@+id/lineOne"
@@ -62,18 +75,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/age" />
 
-    <TextView
-        android:id="@+id/fullName"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/my_birds_btn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="Daniel Malone"
-        android:textColor="#000"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profilePhoto" />
+        app:layout_constraintTop_toBottomOf="@+id/location"
+        android:layout_marginStart="@dimen/double_margin"
+        android:layout_marginEnd="@dimen/double_margin"
+        android:layout_marginTop="@dimen/double_margin"
+        android:background="@drawable/background_button"
+        android:text="@string/my_birds"
+        android:textColor="@android:color/white"/>
+    <Button
+        android:id="@+id/profile_settings_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/my_birds_btn"
+        android:layout_marginStart="@dimen/double_margin"
+        android:layout_marginEnd="@dimen/double_margin"
+        android:layout_marginTop="@dimen/double_margin"
+        android:background="@drawable/background_button"
+        android:text="@string/profile_settings"
+        android:textColor="@android:color/white"/>
+    <Button
+        android:id="@+id/report_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/profile_settings_btn"
+        android:layout_marginStart="@dimen/double_margin"
+        android:layout_marginEnd="@dimen/double_margin"
+        android:layout_marginTop="@dimen/double_margin"
+        android:background="@drawable/background_button"
+        android:text="@string/report"
+        android:textColor="@android:color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

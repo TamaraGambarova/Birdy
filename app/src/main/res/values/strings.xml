@@ -33,4 +33,8 @@
     <string name="passwords_do_not_match">"Passwords don't match! "</string>
     <string name="no_connection">No internet connection! Try again later!</string>
     <string name="error_weak_password">Your password is weak</string>
+    <string name="my_birds">My found birds</string>
+    <string name="profile_settings">Profile settings</string>
+    <string name="report">Report an error</string>
+    <string name="my_profile">My profile</string>
 </resources>

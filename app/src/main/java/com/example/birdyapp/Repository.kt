@@ -63,7 +63,7 @@ class Repository(private val channel: Channel) {
         Log.d("test-loc", response.birdName)
     }
 
-    fun loginUser(email: String, password: String): Single<Birdy.LoginResponse.Result>  {
+    fun loginUser(email: String, password: String): Single<Pair<Birdy.LoginResponse.Result, UserFields>>  {
         return try {
             val blockingStub = newBlockingStub(channel)
             val loginRequest = Birdy.LoginRequest.newBuilder()
@@ -73,7 +73,16 @@ class Repository(private val channel: Channel) {
 
             val response = blockingStub.loginUser(loginRequest)
 
-            response.result.toSingle()
+            val user = UserFields(
+                response.firstName,
+                response.lastName,
+                response.middleName,
+                Date(),
+                response.city
+            )
+
+            (response.result to user).toSingle()
+            //response.result.toSingle()
         } catch (e: Exception) {
             e.printStackTrace()
             Single.error(e)

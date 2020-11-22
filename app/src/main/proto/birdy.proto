@@ -40,6 +40,11 @@ message LoginResponse {
 		DB_ERROR = 3;
 	}
 	Result result = 1;
+	string first_name = 2;
+	string middle_name = 3;
+	string last_name = 4;
+	string birth_date = 5;
+	string city = 6;
 }
 
 message Empty {}
