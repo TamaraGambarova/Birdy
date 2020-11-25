@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@drawable/profile_background"
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -93,7 +94,7 @@
         app:layout_constraintTop_toBottomOf="@+id/my_birds_btn"
         android:layout_marginStart="@dimen/double_margin"
         android:layout_marginEnd="@dimen/double_margin"
-        android:layout_marginTop="@dimen/double_margin"
+        android:layout_marginTop="15dp"
         android:background="@drawable/background_button"
         android:text="@string/profile_settings"
         android:textColor="@android:color/white"/>
@@ -104,7 +105,7 @@
         app:layout_constraintTop_toBottomOf="@+id/profile_settings_btn"
         android:layout_marginStart="@dimen/double_margin"
         android:layout_marginEnd="@dimen/double_margin"
-        android:layout_marginTop="@dimen/double_margin"
+        android:layout_marginTop="15dp"
         android:background="@drawable/background_button"
         android:text="@string/report"
         android:textColor="@android:color/white"/>
