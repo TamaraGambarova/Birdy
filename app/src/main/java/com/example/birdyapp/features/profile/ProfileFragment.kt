@@ -52,11 +52,6 @@ class ProfileFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun initFields() {
-        kycProvider.setKyc(
-            UserFields(
-                "Tamara", "Gambarova", "-", Date(), "Kharkov"
-            )
-        )
         val activeKyc = kycProvider.getKyc()
         userForm.firstName.value = activeKyc?.firstName?.value!!
         userForm.lastName.value = activeKyc.lastName.value!!

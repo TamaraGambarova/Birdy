@@ -63,7 +63,10 @@ class Repository(private val channel: Channel) {
         Log.d("test-loc", response.birdName)
     }
 
-    fun loginUser(email: String, password: String): Single<Pair<Birdy.LoginResponse.Result, UserFields>>  {
+    fun loginUser(
+        email: String,
+        password: String
+    ): Single<Pair<Birdy.LoginResponse.Result, UserFields>> {
         return try {
             val blockingStub = newBlockingStub(channel)
             val loginRequest = Birdy.LoginRequest.newBuilder()
@@ -74,11 +77,11 @@ class Repository(private val channel: Channel) {
             val response = blockingStub.loginUser(loginRequest)
 
             val user = UserFields(
-                response.firstName,
-                response.lastName,
-                response.middleName,
+                response.info.firstName,
+                response.info.lastName,
+                response.info.middleName,
                 Date(),
-                response.city
+                response.info.city
             )
 
             (response.result to user).toSingle()
@@ -89,7 +92,11 @@ class Repository(private val channel: Channel) {
         }
     }
 
-    fun registerUser(email: String, password: String, user: UserFields): Single<Birdy.RegistrationResponse.Result> {
+    fun registerUser(
+        email: String,
+        password: String,
+        user: UserFields
+    ): Single<Birdy.RegistrationResponse.Result> {
         try {
             val blockingStub = newBlockingStub(channel)
 
@@ -111,4 +118,51 @@ class Repository(private val channel: Channel) {
             return Single.error(e)
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun getBirdLocations(birdName: String): Single<List<Birdy.UserBirdInfo.Point>> {
+        try {
+            val blockingStub = newBlockingStub(channel)
+            val getLocationsRequest = Birdy.FindBirdCoordinatesByNameRequest
+                .newBuilder()
+                .setName(birdName)
+                .build()
+            val response =
+                blockingStub.findBirdCoordinatesByName(getLocationsRequest)
+
+            val coordinates = mutableListOf<Birdy.UserBirdInfo.Point>()
+            response.forEachRemaining {
+                Log.d("coord-latitude", it.info.foundPoint.latitude.toString())
+                coordinates.add(it.info.foundPoint)
+            }
+            return coordinates.toSingle()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Single.error(e)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun getUsersByCity(city: String): Single<List<Birdy.UserInfo>> {
+        try {
+            val blockingStub = newBlockingStub(channel)
+            val getUsersRequest = Birdy.FindBoysByCityRequest
+                .newBuilder()
+                .setCity(city)
+                .build()
+            val response = blockingStub.bindBoysByCity(getUsersRequest)
+
+            val users = mutableListOf<Birdy.UserInfo>()
+            response.forEachRemaining {
+                Log.d("coord-latitude", it.firstName)
+                users.add(it)
+            }
+            return users.toSingle()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Single.error(e)
+        }
+    }
+
+
 }

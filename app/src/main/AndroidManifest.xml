@@ -48,6 +48,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
 
+        <activity
+            android:name=".features.map.BirdMapActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.birdyapp.provider"

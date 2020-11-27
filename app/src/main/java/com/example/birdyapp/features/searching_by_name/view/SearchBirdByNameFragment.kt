@@ -24,8 +24,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
+import com.example.birdyapp.features.map.BirdMapActivity
 import com.example.birdyapp.features.searching_by_name.model.BirdModel
 import com.example.birdyapp.features.searching_by_name.view.adapters.BirdsAdapter
+import com.example.birdyapp.features.sign_in.view.SignInActivity
 import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.util.*
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -76,6 +78,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         val binding =
             FragmentFindBirdByNameBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
+        binding.fragment = this
         return binding.root
     }
 
@@ -92,6 +95,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         searchBtn.setOnClickListener {
 
             searchByName()
+            getUsersByCity()
             //dialog.hide()
         }
         uploadBtn.setOnClickListener {
@@ -99,6 +103,19 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                 requireActivity(),
                 this::toCapture
             ) { toastManager.short(R.string.grant_camera_permission) }
+        }
+    }
+
+    private fun getUsersByCity() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            try {
+                Repository(channel).getUsersByCity("Kharkiv")
+                    .compose(ObservableTransformers.defaultSchedulersSingle())
+                    .subscribe()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                toastManager.long("Something went wrong, try again")
+            }
         }
     }
 
@@ -129,8 +146,31 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         with(birdsRecycler) {
             layoutManager =
                 GridLayoutManager(requireContext(), 2)
-            //LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = birdsAdapter
+            birdsAdapter.onClick = {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    Repository(channel).getBirdLocations(it.name)
+                        .compose(ObservableTransformers.defaultSchedulersSingle())
+                        .doOnSubscribe {
+                            isLoading.value = true
+                        }
+                        .doOnError {
+                            isLoading.value = false
+                        }
+                        .subscribeBy(
+                            onSuccess = {
+                                startActivity(
+                                    Intent(
+                                        requireContext(),
+                                        BirdMapActivity::class.java
+                                    )
+                                )
+                            }, onError = {
+
+                            }
+                        )
+                }
+            }
             birdsAdapter.replace(list)
         }
     }
@@ -228,7 +268,11 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
 
                         val bm: Bitmap = BitmapFactory.decodeStream(fis)
                         val baos = ByteArrayOutputStream()
-                        getResizedBitmap(bm, 640, 640)?.compress(Bitmap.CompressFormat.JPEG, 50, baos)
+                        getResizedBitmap(bm, 640, 640)?.compress(
+                            Bitmap.CompressFormat.JPEG,
+                            50,
+                            baos
+                        )
                         val b = baos.toByteArray()
                         Log.d("initial-size", ByteString.copyFrom(b).size().toString())
                         Repository(channel).setBirdLocation(

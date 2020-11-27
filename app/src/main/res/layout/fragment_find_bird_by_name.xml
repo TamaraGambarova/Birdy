@@ -130,7 +130,7 @@
             android:background="@android:color/white"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
+            isVisible="@{fragment.isLoading()}"
             tools:visibility="gone">
 
             <ProgressBar
