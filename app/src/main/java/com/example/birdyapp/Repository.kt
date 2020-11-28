@@ -9,6 +9,7 @@ import com.example.birdyapp.features.searching_by_name.model.BirdModel
 import com.example.birdyapp.features.sign_up.model.UserFields
 import com.google.protobuf.ByteString
 import io.grpc.Channel
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toSingle
 import java.util.*
@@ -164,7 +165,7 @@ class Repository(private val channel: Channel) {
         }
     }
 
-    fun updateUserInfo(user: UserFields) {
+    fun updateUserInfo(user: UserFields): Completable {
         val blockingStub = newBlockingStub(channel)
 
         val userInfo = Birdy.UserInfo.newBuilder()
@@ -175,7 +176,7 @@ class Repository(private val channel: Channel) {
             .setCity(user.city.value)
             .build()
 
-        val response = blockingStub.updateUser(userInfo)
+        return blockingStub.updateUser(userInfo).toSingle().ignoreElement()
         ///response.result.toSingle()
     }
 }

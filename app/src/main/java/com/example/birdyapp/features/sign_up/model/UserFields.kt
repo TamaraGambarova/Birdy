@@ -22,6 +22,7 @@ class UserFields() {
     val birthdayDate = MutableLiveData<Date>()
     val city = MutableLiveData<String>()
 
+    val fullName = MutableLiveData(firstName.value + " " + lastName.value)
 
     fun validate(): Boolean {
         return !(firstName.value.isNullOrBlank()

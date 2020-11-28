@@ -39,4 +39,6 @@
     <string name="report">Report an error</string>
     <string name="my_profile">My profile</string>
     <string name="title_activity_maps">Map</string>
+    <string name="save">Save</string>
+    <string name="edit_profile">Edit profile</string>
 </resources>
