@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">Birdy</string>
     <string name="find_by_name_hint">Type something...</string>
+    <string name="find_person_by_location_hint">Type in the desired location...</string>
     <string name="search">Search</string>
-    <string name="results_label">Here\'re the most sutable results...</string>
+    <string name="results_label">Here\'re the most suitable results...</string>
     <string name="find">Find</string>
     <string name="top">Top</string>
     <string name="messages">Messages</string>
