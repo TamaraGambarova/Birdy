@@ -25,6 +25,7 @@ import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
 import com.example.birdyapp.features.map.BirdMapActivity
+import com.example.birdyapp.features.map.MapsActivity
 import com.example.birdyapp.features.searching_by_name.model.BirdModel
 import com.example.birdyapp.features.searching_by_name.view.adapters.BirdsAdapter
 import com.example.birdyapp.features.sign_in.view.SignInActivity
@@ -148,6 +149,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                 GridLayoutManager(requireContext(), 2)
             adapter = birdsAdapter
             birdsAdapter.onClick = {
+                val intent = Intent(
+                    requireContext(),
+                    MapsActivity::class.java
+                )
+                intent.apply {
+                    intent.putExtra("birdName", it.name)
+                    startActivity(this)
+                }
+/*
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     Repository(channel).getBirdLocations(it.name)
                         .compose(ObservableTransformers.defaultSchedulersSingle())
@@ -162,14 +172,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                                 startActivity(
                                     Intent(
                                         requireContext(),
-                                        BirdMapActivity::class.java
+                                        MapsActivity::class.java
                                     )
                                 )
                             }, onError = {
-
+                                it.printStackTrace()
                             }
                         )
                 }
+*/
             }
             birdsAdapter.replace(list)
         }
