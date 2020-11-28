@@ -164,5 +164,18 @@ class Repository(private val channel: Channel) {
         }
     }
 
+    fun updateUserInfo(user: UserFields) {
+        val blockingStub = newBlockingStub(channel)
 
+        val userInfo = Birdy.UserInfo.newBuilder()
+            .setFirstName(user.firstName.value)
+            .setLastName(user.lastName.value)
+            .setMiddleName(user.middleName.value)
+            .setBirthDate(user.birthdayDate.value.toString())
+            .setCity(user.city.value)
+            .build()
+
+        val response = blockingStub.updateUser(userInfo)
+        ///response.result.toSingle()
+    }
 }
