@@ -16,6 +16,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.grpc.Channel
 import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.android.synthetic.main.activity_maps.*
+import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -34,20 +37,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val birdName =intent.getStringExtra("birdName")
         birdName?.let{
+            initToolbar(birdName)
+
             getCoordinates(it)
         }
+    }
+
+    private fun initToolbar(name: String) {
+        maps_toolbar.title_text_view.text = name + getString(R.string.location)
     }
 
     private fun getCoordinates(name: String) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             Repository(channel).getBirdLocations(name)
                 .compose(ObservableTransformers.defaultSchedulersSingle())
-                .doOnSubscribe {
+                /*.doOnSubscribe {
                     isLoading.value = true
                 }
                 .doOnError {
                     isLoading.value = false
-                }
+                }*/
                 .subscribeBy(
                     onSuccess = {
                         setMarkers(name, it)

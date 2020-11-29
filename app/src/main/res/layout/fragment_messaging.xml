@@ -8,7 +8,7 @@
 
         <variable
             name="fragment"
-            type="com.example.birdyapp.features.searching_by_name.view.SearchBirdByNameFragment" />
+            type="com.example.birdyapp.features.messages.MessagesFragment" />
     </data>
 
     <RelativeLayout
@@ -24,7 +24,7 @@
                 <!-- toolbar -->
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/birdNameLayout"
+                    android:id="@+id/cityLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="306dp"
                     android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                     android:layout_marginTop="@dimen/standard_margin"
                     android:text="@string/results_label"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/birdNameLayout" />
+                    app:layout_constraintTop_toBottomOf="@id/cityLayout" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/birdsRecycler"
