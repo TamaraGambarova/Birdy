@@ -5,27 +5,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import birdy_grpc.Birdy
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentMessagingBinding
-import com.example.birdyapp.databinding.FragmentProfileBinding
+import com.example.birdyapp.features.messages.logic.UsersAdapter
+import com.example.birdyapp.features.sign_up.model.UserFields
 import com.example.birdyapp.util.ObservableTransformers
 import com.example.birdyapp.util.ScopedFragment
 import com.example.birdyapp.util.ToastManager
 import io.grpc.Channel
-import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
+import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.android.synthetic.main.birdwatchers_list_layout.*
 import kotlinx.android.synthetic.main.fragment_messaging.*
-import kotlinx.android.synthetic.main.fragment_messaging.searchBtn
 import kotlinx.android.synthetic.main.toolbar_with_image.*
 import kotlinx.android.synthetic.main.toolbar_with_image.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
+import java.util.*
 
 class MessagesFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
     private val toastManager: ToastManager by instance()
+    private val usersAdapter: UsersAdapter by lazy {
+        UsersAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,12 +62,29 @@ class MessagesFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
         }
     }
 
+    private fun fillUsersRecyclerView(items: List<UserFields>) {
+
+        users_recycler.apply {
+            layoutManager =
+                    // GridLayoutManager(requireContext(), 2)
+                LinearLayoutManager(this@MessagesFragment.context)
+            adapter = usersAdapter
+        }
+        usersAdapter.replace(items)
+    }
+
     private fun getUsersByCity(city: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {
                 Repository(channel).getUsersByCity(city)
                     .compose(ObservableTransformers.defaultSchedulersSingle())
-                    .subscribe()
+                    .subscribeBy(
+                        onSuccess = {
+                            fillUsersRecyclerView(it.toUsersList())
+                        }, onError = {
+                            it.printStackTrace()
+                        }
+                    )
             } catch (e: Exception) {
                 e.printStackTrace()
                 toastManager.long("Something went wrong, try again")
@@ -71,5 +94,17 @@ class MessagesFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
 
     companion object {
         fun getInstance(channel: Channel) = MessagesFragment(channel)
+    }
+}
+
+private fun List<Birdy.UserInfo>.toUsersList(): List<UserFields> {
+    return this.map {
+        UserFields(
+            it.firstName,
+            it.lastName,
+            it.middleName,
+            Date(),
+            it.city
+        )
     }
 }

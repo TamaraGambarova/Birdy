@@ -51,7 +51,7 @@
                     tools:layout_editor_absoluteY="55dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/birdsRecycler"
+                    android:id="@+id/usersRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/standard_margin"

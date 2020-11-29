@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.birdyapp.databinding.ActivityMainBinding
+import com.example.birdyapp.features.messages.MessagesFragment
 import com.example.birdyapp.features.profile.ProfileFragment
 import com.example.birdyapp.features.searching_by_name.view.OfflineFragment
 import com.example.birdyapp.features.searching_by_name.view.SearchBirdByNameFragment
@@ -69,9 +70,9 @@ class MainActivity : AppCompatActivity(), KodeinAware {
                     TopFragment.getInstance()
                 }
                 R.id.messages -> {
-                    OfflineFragment.getInstance(channel)
+                    //OfflineFragment.getInstance(channel)
 
-                    //MessagesFragment.getInstance()
+                    MessagesFragment.getInstance(channel)
                 }
                 R.id.profile -> {
                     ProfileFragment.getInstance()
