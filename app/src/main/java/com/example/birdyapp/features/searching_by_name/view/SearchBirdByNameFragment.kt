@@ -3,12 +3,10 @@ package com.example.birdyapp.features.searching_by_name.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.graphics.Matrix
 import android.location.Location
 import android.net.Uri
 import android.os.Build
@@ -26,8 +24,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
+import com.example.birdyapp.features.map.BirdMapActivity
 import com.example.birdyapp.features.searching_by_name.model.BirdModel
 import com.example.birdyapp.features.searching_by_name.view.adapters.BirdsAdapter
+import com.example.birdyapp.features.sign_in.view.SignInActivity
 import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.util.*
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -78,6 +78,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         val binding =
             FragmentFindBirdByNameBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
+        binding.fragment = this
         return binding.root
     }
 
@@ -92,23 +93,29 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initButtons() {
         searchBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            val view = layoutInflater.inflate(R.layout.layout_processing_dialog, null)
 
-            builder.setView(view)
-            builder.setCustomTitle(null)
-
-            val dialog: AlertDialog = builder.create()
-
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             searchByName()
-            dialog.hide()
+            getUsersByCity()
+            //dialog.hide()
         }
         uploadBtn.setOnClickListener {
             cameraPermission.check(
                 requireActivity(),
                 this::toCapture
             ) { toastManager.short(R.string.grant_camera_permission) }
+        }
+    }
+
+    private fun getUsersByCity() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            try {
+                Repository(channel).getUsersByCity("Kharkiv")
+                    .compose(ObservableTransformers.defaultSchedulersSingle())
+                    .subscribe()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                toastManager.long("Something went wrong, try again")
+            }
         }
     }
 
@@ -139,8 +146,31 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         with(birdsRecycler) {
             layoutManager =
                 GridLayoutManager(requireContext(), 2)
-            //LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = birdsAdapter
+            birdsAdapter.onClick = {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    Repository(channel).getBirdLocations(it.name)
+                        .compose(ObservableTransformers.defaultSchedulersSingle())
+                        .doOnSubscribe {
+                            isLoading.value = true
+                        }
+                        .doOnError {
+                            isLoading.value = false
+                        }
+                        .subscribeBy(
+                            onSuccess = {
+                                startActivity(
+                                    Intent(
+                                        requireContext(),
+                                        BirdMapActivity::class.java
+                                    )
+                                )
+                            }, onError = {
+
+                            }
+                        )
+                }
+            }
             birdsAdapter.replace(list)
         }
     }
@@ -238,7 +268,11 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
 
                         val bm: Bitmap = BitmapFactory.decodeStream(fis)
                         val baos = ByteArrayOutputStream()
-                        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        getResizedBitmap(bm, 640, 640)?.compress(
+                            Bitmap.CompressFormat.JPEG,
+                            50,
+                            baos
+                        )
                         val b = baos.toByteArray()
                         Log.d("initial-size", ByteString.copyFrom(b).size().toString())
                         Repository(channel).setBirdLocation(
@@ -253,6 +287,22 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         }) {
             toastManager.short(R.string.grant_location_permission)
         }
+    }
+
+    fun getResizedBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap? {
+        val width = bm.width
+        val height = bm.height
+        val scaleWidth = newWidth.toFloat() / width
+        val scaleHeight = newHeight.toFloat() / height
+        // CREATE A MATRIX FOR THE MANIPULATION
+        val matrix = Matrix()
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight)
+
+        // "RECREATE" THE NEW BITMAP
+        return Bitmap.createBitmap(
+            bm, 0, 0, width, height, matrix, false
+        )
     }
 
     private fun validate(value: String): Boolean {

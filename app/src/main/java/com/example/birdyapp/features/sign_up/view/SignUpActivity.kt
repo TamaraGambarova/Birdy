@@ -157,5 +157,6 @@ class SignUpActivity : AppCompatActivity(), KodeinAware {
                 MainActivity::class.java
             )
         )
+        finish()
     }
 }

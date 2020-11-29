@@ -4,6 +4,8 @@ import android.app.Application
 import com.example.birdyapp.db.BirdsDatabase
 import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.identity.CredentialsProviderImpl
+import com.example.birdyapp.identity.KycProvider
+import com.example.birdyapp.identity.KycProviderImpl
 import com.example.birdyapp.util.ConnectivityInterceptor
 import com.example.birdyapp.util.ToastManager
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -24,6 +26,7 @@ class App: Application(), KodeinAware {
 
         //credentials on preferences
         bind<CredentialsProvider>() with provider { CredentialsProviderImpl(this@App) }
+        bind<KycProvider>() with provider { KycProviderImpl(this@App) }
 
         //db
         bind() from provider { BirdsDatabase (instance()) }

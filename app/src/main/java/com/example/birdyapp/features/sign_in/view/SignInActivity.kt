@@ -15,6 +15,7 @@ import com.example.birdyapp.extensions.makeLinks
 import com.example.birdyapp.features.sign_in.model.Credentials
 import com.example.birdyapp.features.sign_up.view.SignUpActivity
 import com.example.birdyapp.identity.CredentialsProvider
+import com.example.birdyapp.identity.KycProvider
 import com.example.birdyapp.util.ActivitiesUtil
 import com.example.birdyapp.util.ConnectivityInterceptor
 import com.example.birdyapp.util.ToastManager
@@ -29,6 +30,7 @@ import org.kodein.di.generic.instance
 class SignInActivity : AppCompatActivity(), KodeinAware {
     override val kodein by closestKodein()
     private val credentialsProvider: CredentialsProvider by instance()
+    private val kycProvider: KycProvider by instance()
     private val connectivityInterceptor: ConnectivityInterceptor by instance()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private lateinit var channel: Channel
@@ -93,9 +95,10 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
                 progress_sign_in.visibility = View.VISIBLE
             }
             .subscribe({
-                Log.d("res--", it.number.toString())
-                when (it.number) {
+                Log.d("res--", it.first.number.toString())
+                when (it.first.number) {
                     0 -> {
+                        kycProvider.setKyc(it.second)
                         goToMainActivity()
                     }
                     1 -> {

@@ -206,7 +206,7 @@ class OfflineFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
 
                         val bm: Bitmap = BitmapFactory.decodeStream(fis)
                         val baos = ByteArrayOutputStream()
-                        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        bm.compress(Bitmap.CompressFormat.PNG, 60, baos)
                         val b: ByteArray = baos.toByteArray()
 
                         saveNewBird(

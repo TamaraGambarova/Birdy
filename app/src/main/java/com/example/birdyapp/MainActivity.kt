@@ -7,21 +7,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.birdyapp.databinding.ActivityMainBinding
-import com.example.birdyapp.features.messages.MessagesFragment
+import com.example.birdyapp.features.profile.ProfileFragment
 import com.example.birdyapp.features.searching_by_name.view.OfflineFragment
 import com.example.birdyapp.features.searching_by_name.view.SearchBirdByNameFragment
 import com.example.birdyapp.features.sign_in.view.SignInActivity
 import com.example.birdyapp.features.top.TopFragment
 import com.example.birdyapp.identity.CredentialsProvider
+import com.example.birdyapp.identity.KycProvider
 import com.example.birdyapp.util.ActivitiesUtil.initChannel
 import io.grpc.Channel
 import io.grpc.ManagedChannel
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.toolbar_with_image.*
 import kotlinx.android.synthetic.main.toolbar_with_image.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
-import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
 class MainActivity : AppCompatActivity(), KodeinAware {
@@ -29,6 +28,7 @@ class MainActivity : AppCompatActivity(), KodeinAware {
 
     private lateinit var binding: ActivityMainBinding
     private val credentialsProvider: CredentialsProvider by instance()
+    private val kycProvider: KycProvider by instance()
 
     private lateinit var channel: Channel
 
@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity(), KodeinAware {
         toolbar_with_image.title_text_view.text = getString(R.string.search)
         toolbar_with_image.log_out_imageView.setOnClickListener {
             credentialsProvider.setCredentials(null)
+            kycProvider.setKyc(null)
             startActivity(
                 Intent(
                     this,
@@ -68,10 +69,12 @@ class MainActivity : AppCompatActivity(), KodeinAware {
                     TopFragment.getInstance()
                 }
                 R.id.messages -> {
-                    MessagesFragment.getInstance()
+                    OfflineFragment.getInstance(channel)
+
+                    //MessagesFragment.getInstance()
                 }
                 R.id.profile -> {
-                    OfflineFragment.getInstance(channel)
+                    ProfileFragment.getInstance()
                 }
                 else -> return@setOnNavigationItemSelectedListener false
             }
