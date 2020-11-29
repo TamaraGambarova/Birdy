@@ -22,47 +22,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <!-- toolbar -->
-                <ImageView
-                    android:id="@+id/birdyLogo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_bird_logo"                    android:layout_marginTop="@dimen/standard_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:background="@drawable/ic_launcher_background" />
 
                 <ImageButton
                     android:id="@+id/returnBtn"
                     android:layout_width="35dp"
                     android:layout_height="30dp"
-                    android:layout_marginTop="55dp"
+                    android:layout_marginStart="@dimen/default_horizontal_margin"
                     android:background="@drawable/transparent_background_button"
                     android:src="@drawable/ic_return"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/titleLabel"
-                    app:layout_constraintTop_toBottomOf="@+id/birdyLogo" />
+                    app:layout_constraintStart_toStartOf="@+id/birdsRecycler"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="@dimen/double_margin"
+                    tools:layout_editor_absoluteY="55dp" />
 
 
                 <TextView
                     android:id="@+id/titleLabel"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/standard_margin"
                     android:text="@string/my_friends"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:textSize="30dp"
                     android:textColor="@android:color/black"
+                    android:textSize="30dp"
                     app:layout_constraintStart_toEndOf="@+id/returnBtn"
-                    app:layout_constraintTop_toBottomOf="@id/birdyLogo"
-                    tools:layout_editor_absoluteX="28dp" />
+                    app:layout_constraintTop_toTopOf="@+id/returnBtn"
+                    tools:layout_editor_absoluteY="55dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/birdsRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/standard_margin"
+                    android:paddingTop="@dimen/standard_margin"
                     app:layout_constraintTop_toBottomOf="@id/titleLabel"
                     tools:itemCount="2"
                     tools:layout_editor_absoluteX="4dp"
