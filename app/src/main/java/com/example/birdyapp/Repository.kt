@@ -42,7 +42,12 @@ class Repository(private val channel: Channel) {
         return matchedBirds.toSingle()
     }
 
-    fun setBirdLocation(photo: ByteString, lat: Double, long: Double, finder: String) {
+    fun setBirdLocation(
+        photo: ByteString,
+        lat: Double,
+        long: Double,
+        finder: String
+    ): Single<Birdy.AddBirdWithDataResponse> {
         val blockingStub = newBlockingStub(channel)
         val setLocationRequest =
             Birdy.AddBirdWithDataRequest.newBuilder()
@@ -59,9 +64,8 @@ class Repository(private val channel: Channel) {
                         .setFoundTime(Calendar.getInstance().time.toString())
                 ).build()
 
-        val response =
-            blockingStub.addBirdWithData(setLocationRequest).toBuilder().build()
-        Log.d("test-loc", response.birdName)
+        return blockingStub.addBirdWithData(setLocationRequest).toBuilder().build().toSingle()
+        //Log.d("test-loc", response.birdName)
     }
 
     fun loginUser(
@@ -165,7 +169,7 @@ class Repository(private val channel: Channel) {
         }
     }
 
-    fun updateUserInfo(user: UserFields): Completable {
+    fun updateUserInfo(user: UserFields, email: String, password: String): Completable {
         val blockingStub = newBlockingStub(channel)
 
         val userInfo = Birdy.UserInfo.newBuilder()
@@ -174,6 +178,8 @@ class Repository(private val channel: Channel) {
             .setMiddleName(user.middleName.value)
             .setBirthDate(user.birthdayDate.value.toString())
             .setCity(user.city.value)
+            .setEmail(email)
+            .setPassword(password)
             .build()
 
         return blockingStub.updateUser(userInfo).toSingle().ignoreElement()

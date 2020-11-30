@@ -17,7 +17,6 @@ import com.example.birdyapp.util.ScopedFragment
 import com.example.birdyapp.util.ToastManager
 import io.grpc.Channel
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.birdwatchers_list_layout.*
 import kotlinx.android.synthetic.main.fragment_messaging.*
 import kotlinx.android.synthetic.main.toolbar_with_image.*
 import kotlinx.android.synthetic.main.toolbar_with_image.view.*
@@ -80,6 +79,7 @@ class MessagesFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
                     .compose(ObservableTransformers.defaultSchedulersSingle())
                     .subscribeBy(
                         onSuccess = {
+                            resultsLabel.visibility = View.VISIBLE
                             fillUsersRecyclerView(it.toUsersList())
                         }, onError = {
                             it.printStackTrace()

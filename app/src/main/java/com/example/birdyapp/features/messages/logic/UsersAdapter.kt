@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.birdyapp.base.BaseAdapter
 import com.example.birdyapp.databinding.BirdwatcherItemBinding
 import com.example.birdyapp.features.sign_up.model.UserFields
+import java.util.*
 
 class UsersAdapter:
     BaseAdapter<UserFields, UsersAdapter.UsersViewHolder>(){

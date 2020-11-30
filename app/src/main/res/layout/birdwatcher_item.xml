@@ -43,7 +43,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.02"
-                    android:src="@drawable/ic_add_friends_black" />
+                    android:src="@drawable/ic_profile_picture" />
 
                 <TextView
                     android:id="@+id/birdwatcherName"
@@ -68,7 +68,7 @@
                     android:textStyle="normal|bold"
                     app:layout_constraintStart_toEndOf="@+id/birdwatcherPhoto"
                     app:layout_constraintTop_toBottomOf="@+id/birdwatcherName"
-                    tools:text="32 y.o" />
+                    android:text="19 y.o"/>
 
                 <TextView
                     android:id="@+id/birdwatcherLocation"

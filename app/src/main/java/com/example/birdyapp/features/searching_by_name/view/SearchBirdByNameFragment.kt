@@ -277,8 +277,18 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                             photo = ByteString.copyFrom(b),
                             lat = currentLocation.latitude,
                             long = currentLocation.longitude,
-                            finder = "gambarova.tamara@gmail.com"
-                        )
+                            finder = credentialsProvider.getCredentials()!!.email
+                        ).compose(ObservableTransformers.defaultSchedulersSingle())
+                            .subscribeBy(
+                                onSuccess = {
+                                    //fillBirdsRecyclerView(BirdModel())
+                                    bird_by_photo_name.visibility = View.VISIBLE
+                                    bird_by_photo_name.text = it.birdName
+                                    Log.d("onSuccess", it.birdName)
+                                }, onError = {
+                                    it.printStackTrace()
+                                }
+                            )
                     }
                 }
 

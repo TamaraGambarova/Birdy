@@ -20,7 +20,7 @@ object ActivitiesUtil {
         return ManagedChannelBuilder
                 //178.150.141.36
                 //192.168.1.20
-            .forAddress("192.168.1.20", 1488)
+            .forAddress("178.150.141.36", 1488)
             .usePlaintext()
             .build()
     }
