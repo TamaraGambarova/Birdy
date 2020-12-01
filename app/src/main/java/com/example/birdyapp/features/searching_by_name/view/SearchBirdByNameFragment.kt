@@ -25,6 +25,7 @@ import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
 import com.example.birdyapp.features.map.BirdMapActivity
+import com.example.birdyapp.features.map.MapsActivity
 import com.example.birdyapp.features.searching_by_name.model.BirdModel
 import com.example.birdyapp.features.searching_by_name.view.adapters.BirdsAdapter
 import com.example.birdyapp.features.sign_in.view.SignInActivity
@@ -84,7 +85,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             initButtons()
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -95,7 +96,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         searchBtn.setOnClickListener {
 
             searchByName()
-            getUsersByCity()
+            //getUsersByCity()
             //dialog.hide()
         }
         uploadBtn.setOnClickListener {
@@ -106,19 +107,6 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         }
     }
 
-    private fun getUsersByCity() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            try {
-                Repository(channel).getUsersByCity("Kharkiv")
-                    .compose(ObservableTransformers.defaultSchedulersSingle())
-                    .subscribe()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                toastManager.long("Something went wrong, try again")
-            }
-        }
-    }
-
     @RequiresApi(Build.VERSION_CODES.N)
     private fun searchByName() {
         progress.visibility = View.VISIBLE
@@ -126,7 +114,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
 
         if (validate(birdNameLayout.editText?.text.toString().trimStart())) {
             try {
-                Repository(channel).findBirdByName(birdNameLayout.editText?.text.toString())
+                Repository(channel).findBirdByName(birdNameLayout.editText?.text.toString().trim())
                     .compose(ObservableTransformers.defaultSchedulersSingle())
 
                     .subscribeBy({
@@ -148,6 +136,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                 GridLayoutManager(requireContext(), 2)
             adapter = birdsAdapter
             birdsAdapter.onClick = {
+                val intent = Intent(
+                    requireContext(),
+                    MapsActivity::class.java
+                )
+                intent.apply {
+                    intent.putExtra("birdName", it.name)
+                    startActivity(this)
+                }
+/*
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     Repository(channel).getBirdLocations(it.name)
                         .compose(ObservableTransformers.defaultSchedulersSingle())
@@ -162,14 +159,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                                 startActivity(
                                     Intent(
                                         requireContext(),
-                                        BirdMapActivity::class.java
+                                        MapsActivity::class.java
                                     )
                                 )
                             }, onError = {
-
+                                it.printStackTrace()
                             }
                         )
                 }
+*/
             }
             birdsAdapter.replace(list)
         }
@@ -279,8 +277,18 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                             photo = ByteString.copyFrom(b),
                             lat = currentLocation.latitude,
                             long = currentLocation.longitude,
-                            finder = "gambarova.tamara@gmail.com"
-                        )
+                            finder = credentialsProvider.getCredentials()!!.email
+                        ).compose(ObservableTransformers.defaultSchedulersSingle())
+                            .subscribeBy(
+                                onSuccess = {
+                                    //fillBirdsRecyclerView(BirdModel())
+                                    bird_by_photo_name.visibility = View.VISIBLE
+                                    bird_by_photo_name.text = it.birdName
+                                    Log.d("onSuccess", it.birdName)
+                                }, onError = {
+                                    it.printStackTrace()
+                                }
+                            )
                     }
                 }
 

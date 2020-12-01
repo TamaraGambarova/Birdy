@@ -8,7 +8,7 @@
 
         <variable
             name="fragment"
-            type="com.example.birdyapp.features.searching_by_name.view.SearchBirdByNameFragment" />
+            type="com.example.birdyapp.features.messages.MessagesFragment" />
     </data>
 
     <RelativeLayout
@@ -24,7 +24,7 @@
                 <!-- toolbar -->
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/birdNameLayout"
+                    android:id="@+id/cityLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="306dp"
                     android:layout_height="wrap_content"
@@ -42,8 +42,7 @@
                         android:layout_width="301dp"
                         android:layout_height="wrap_content"
                         android:hint="@string/find_person_by_location_hint"
-                        android:inputType="textPassword"
-                        android:maxLength="8" />
+                        android:inputType="text"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageButton
@@ -57,27 +56,30 @@
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/birdNameLayout" />
+                    app:layout_constraintTop_toTopOf="@+id/cityLayout" />
 
 
                 <TextView
                     android:id="@+id/resultsLabel"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="28dp"
                     android:layout_marginTop="@dimen/standard_margin"
                     android:text="@string/results_label"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/birdNameLayout" />
+                    app:layout_constraintTop_toBottomOf="@id/cityLayout" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/birdsRecycler"
+                    android:id="@+id/users_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/resultsLabel"
                     android:layout_margin="@dimen/standard_margin"
+                    android:paddingTop="@dimen/standard_margin"
+                    app:layout_constraintTop_toBottomOf="@id/resultsLabel"
                     tools:itemCount="2"
-                    tools:listitem="@layout/layout_bird_item"/>
+                    tools:layout_editor_absoluteX="4dp"
+                    tools:listitem="@layout/birdwatcher_item" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>

@@ -89,7 +89,8 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
         )
     }
 
-    private fun signIn(email: String, password: String) {
+    private fun signIn(email: String, password: String)
+    {
         Repository(channel).loginUser(email, password)
             .doOnSubscribe {
                 progress_sign_in.visibility = View.VISIBLE

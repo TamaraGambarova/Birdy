@@ -1,5 +1,6 @@
 package com.example.birdyapp.features.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +12,12 @@ import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.identity.KycProvider
 import com.example.birdyapp.util.ScopedFragment
 import com.example.birdyapp.util.ToastManager
+import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.toolbar_with_image.*
 import kotlinx.android.synthetic.main.toolbar_with_image.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
-import java.util.*
 
 class ProfileFragment : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
@@ -45,6 +46,14 @@ class ProfileFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun initButtons() {
+        profile_settings_btn.setOnClickListener {
+            startActivity(
+                Intent(
+                    requireContext(),
+                    EditProfileActivity::class.java
+                )
+            )
+        }
     }
 
     private fun initToolbar() {
@@ -58,6 +67,8 @@ class ProfileFragment : ScopedFragment(), KodeinAware {
         userForm.middleName.value = activeKyc.middleName.value!!
         userForm.birthdayDate.value = activeKyc.birthdayDate.value!!
         userForm.city.value = activeKyc.city.value!!
+
+        fullName.text = "${activeKyc?.firstName.value!!} ${activeKyc.lastName.value!!}"
     }
 
     companion object {

@@ -8,6 +8,7 @@
     <string name="top">Top</string>
     <string name="messages">Messages</string>
     <string name="profile">Profile</string>
+    <string name="my_friends">My friends</string>
     <string name="grant_camera_permission">Please, grant camera permission!</string>
     <string name="canceled">Canceled</string>
     <string name="grant_location_permission">Please grant your location permission</string>
@@ -38,4 +39,9 @@
     <string name="profile_settings">Profile settings</string>
     <string name="report">Report an error</string>
     <string name="my_profile">My profile</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="save">Save</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="location">" location"</string>
+    <string name="find_users">Find users</string>
 </resources>
