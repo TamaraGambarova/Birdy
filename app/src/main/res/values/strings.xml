@@ -44,4 +44,5 @@
     <string name="edit_profile">Edit profile</string>
     <string name="location">" location"</string>
     <string name="find_users">Find users</string>
+    <string name="grant_audio_permission">Please, grant audio permission!</string>
 </resources>

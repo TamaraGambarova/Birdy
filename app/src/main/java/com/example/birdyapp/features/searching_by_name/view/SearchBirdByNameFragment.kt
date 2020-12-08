@@ -8,6 +8,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.location.Location
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -24,11 +26,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
-import com.example.birdyapp.features.map.BirdMapActivity
 import com.example.birdyapp.features.map.MapsActivity
 import com.example.birdyapp.features.searching_by_name.model.BirdModel
 import com.example.birdyapp.features.searching_by_name.view.adapters.BirdsAdapter
-import com.example.birdyapp.features.sign_in.view.SignInActivity
 import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.util.*
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -41,10 +41,7 @@ import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
+import java.io.*
 
 class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
@@ -53,6 +50,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private val toastManager: ToastManager by instance()
 
     private val cameraPermission = PermissionManager(Manifest.permission.CAMERA, 404)
+    private val audioPermission = PermissionManager(Manifest.permission.RECORD_AUDIO, 403)
     private val fineLocationPermission =
         PermissionManager(Manifest.permission.ACCESS_FINE_LOCATION, 2)
     private val coarseLocationPermission =
@@ -61,6 +59,11 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private val birdsAdapter: BirdsAdapter by lazy {
         BirdsAdapter()
     }
+
+    private var recorder: MediaRecorder? = null
+    private var player: MediaPlayer? = null
+
+    private var fileName: String = ""
 
 
     private lateinit var currentLocation: Location
@@ -105,6 +108,45 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                 this::toCapture
             ) { toastManager.short(R.string.grant_camera_permission) }
         }
+
+        recordBtn.setOnClickListener {
+            audioPermission.check(
+                requireActivity(),
+                this::toRecord
+            ) { toastManager.short(R.string.grant_audio_permission) }
+        }
+
+        playBtn.setOnClickListener {
+            player = MediaPlayer().apply {
+                try {
+                    setDataSource(fileName)
+                    prepare()
+                    start()
+                } catch (e: IOException) {
+                    Log.e("audio_playing", "prepare() failed")
+                }
+            }
+
+        }
+    }
+
+    private fun toRecord() {
+
+        recorder = MediaRecorder().apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setOutputFile(fileName)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+
+            try {
+                prepare()
+            } catch (e: IOException) {
+                Log.e("audio_recording", "prepare() failed")
+            }
+
+            start()
+        }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -282,8 +324,8 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                             .subscribeBy(
                                 onSuccess = {
                                     //fillBirdsRecyclerView(BirdModel())
-                                    bird_by_photo_name.visibility = View.VISIBLE
-                                    bird_by_photo_name.text = it.birdName
+                                   /* bird_by_photo_name.visibility = View.VISIBLE
+                                    bird_by_photo_name.text = it.birdName*/
                                     Log.d("onSuccess", it.birdName)
                                 }, onError = {
                                     it.printStackTrace()

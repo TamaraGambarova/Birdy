@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@{fragment.userForm.birthdayDate.toString()}"
+            android:text="19 years old"
             tools:text="24 years old"
             android:textColor="#000"
             app:layout_constraintEnd_toEndOf="parent"
