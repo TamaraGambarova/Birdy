@@ -110,43 +110,13 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         }
 
         recordBtn.setOnClickListener {
-            audioPermission.check(
-                requireActivity(),
-                this::toRecord
-            ) { toastManager.short(R.string.grant_audio_permission) }
-        }
-
-        playBtn.setOnClickListener {
-            player = MediaPlayer().apply {
-                try {
-                    setDataSource(fileName)
-                    prepare()
-                    start()
-                } catch (e: IOException) {
-                    Log.e("audio_playing", "prepare() failed")
-                }
-            }
-
-        }
-    }
-
-    private fun toRecord() {
-
-        recorder = MediaRecorder().apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-            setOutputFile(fileName)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-
-            try {
-                prepare()
-            } catch (e: IOException) {
-                Log.e("audio_recording", "prepare() failed")
-            }
-
-            start()
-        }
-
+            startActivity(
+                Intent(
+                    requireContext(),
+                    AudioRecordActivity::class.java
+                )
+            )
+           }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -324,8 +294,8 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                             .subscribeBy(
                                 onSuccess = {
                                     //fillBirdsRecyclerView(BirdModel())
-                                   /* bird_by_photo_name.visibility = View.VISIBLE
-                                    bird_by_photo_name.text = it.birdName*/
+                                    /* bird_by_photo_name.visibility = View.VISIBLE
+                                     bird_by_photo_name.text = it.birdName*/
                                     Log.d("onSuccess", it.birdName)
                                 }, onError = {
                                     it.printStackTrace()
