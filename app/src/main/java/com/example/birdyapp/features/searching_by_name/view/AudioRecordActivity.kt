@@ -3,9 +3,11 @@ package com.example.birdyapp.features.searching_by_name.view
 import android.Manifest
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -20,6 +22,8 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
 
 
 private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
@@ -43,8 +47,8 @@ class AudioRecordActivity : AppCompatActivity(), KodeinAware {
 
     var countDownTimer: CountDownTimer? = null
     var second = -1
-    var minute:Int = 0
-    var hour:Int = 0
+    var minute: Int = 0
+    var hour: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +77,13 @@ class AudioRecordActivity : AppCompatActivity(), KodeinAware {
 
             mStartPlaying = !mStartPlaying
         }
+        send.setOnClickListener {
+            val audioBytes = if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                getAudioBytesArray()
+            } else {
+                TODO("VERSION.SDK_INT < O")
+            }
+        }
     }
 
     private fun initToolbar() {
@@ -80,17 +91,25 @@ class AudioRecordActivity : AppCompatActivity(), KodeinAware {
     }
 
     private fun onRecord(start: Boolean) = if (start) {
+        record.setImageResource(R.drawable.ic_stop)
+        record_label.text = getString(R.string.stop)
         showTimer()
         startRecording()
     } else {
+        record.setImageResource(R.drawable.ic_record)
+        record_label.text = getString(R.string.record)
         countDownTimer?.cancel()
-        time.text = "00:00:00"
+        time.text = getString(R.string.start_time)
         stopRecording()
     }
 
     private fun onPlay(start: Boolean) = if (start) {
+        play.setImageResource(R.drawable.ic_pause)
+        play_label.text = getString(R.string.pause)
         startPlaying()
     } else {
+        play.setImageResource(R.drawable.ic_play)
+        play_label.text = getString(R.string.play)
         stopPlaying()
     }
 
@@ -168,4 +187,8 @@ class AudioRecordActivity : AppCompatActivity(), KodeinAware {
         return String.format("%02d:%02d:%02d", hour, minute, second)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getAudioBytesArray(): ByteArray {
+        return Files.readAllBytes(Paths.get(fileName))
+    }
 }
