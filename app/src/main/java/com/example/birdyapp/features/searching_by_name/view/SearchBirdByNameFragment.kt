@@ -41,7 +41,10 @@ import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
-import java.io.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 
 class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
@@ -50,7 +53,6 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private val toastManager: ToastManager by instance()
 
     private val cameraPermission = PermissionManager(Manifest.permission.CAMERA, 404)
-    private val audioPermission = PermissionManager(Manifest.permission.RECORD_AUDIO, 403)
     private val fineLocationPermission =
         PermissionManager(Manifest.permission.ACCESS_FINE_LOCATION, 2)
     private val coarseLocationPermission =
@@ -59,12 +61,6 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private val birdsAdapter: BirdsAdapter by lazy {
         BirdsAdapter()
     }
-
-    private var recorder: MediaRecorder? = null
-    private var player: MediaPlayer? = null
-
-    private var fileName: String = ""
-
 
     private lateinit var currentLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient

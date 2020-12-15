@@ -51,4 +51,5 @@
     <string name="pause">Pause</string>
     <string name="play">Play</string>
     <string name="start_time">00:00:00</string>
+    <string name="enter_top_amount">Enter Top Amount</string>
 </resources>

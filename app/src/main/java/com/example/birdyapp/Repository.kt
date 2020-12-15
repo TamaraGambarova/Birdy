@@ -185,4 +185,30 @@ class Repository(private val channel: Channel) {
         return blockingStub.updateUser(userInfo).toSingle().ignoreElement()
         ///response.result.toSingle()
     }
+
+    fun getBirdsTop(amount: Int): Single<MutableList<Birdy.EncyclopedicBirdInfo>> {
+        try {
+            val blockingStub = newBlockingStub(channel)
+            val getTopRequest = Birdy.GetTopBirdsRequest
+                .newBuilder()
+                .setCount(amount)
+                .build()
+
+            val response = blockingStub.getTopBirds(getTopRequest)
+
+            val birds = mutableListOf<Birdy.EncyclopedicBirdInfo>()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                response.forEachRemaining {
+                    Log.d("bird-top", it.name)
+                    birds.add(it)
+                }
+            }
+            return birds.toSingle()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Single.error(e)
+        }
+    }
+
+
 }
