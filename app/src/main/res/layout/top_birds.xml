@@ -39,14 +39,20 @@
 
 
                 <ImageView
-                    android:id="@+id/birdyCrowm"
+                    android:id="@+id/birdyCrown"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
+                    android:layout_marginStart="180dp"
+                    android:layout_marginTop="84dp"
+                    android:layout_marginEnd="171dp"
+                    android:layout_marginBottom="6dp"
                     android:icon="@drawable/ic_bird_logo"
                     android:src="@drawable/ic_crowned_bird"
-                    tools:background="@color/transparent"
-                    tools:layout_editor_absoluteX="180dp"
-                    tools:layout_editor_absoluteY="84dp" />
+                    app:layout_constraintBottom_toTopOf="@+id/birdsRecycler"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:background="@color/transparent" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -57,7 +63,7 @@
                     tools:itemCount="2"
                     tools:layout_editor_absoluteX="16dp"
                     tools:layout_editor_absoluteY="170dp"
-                    app:layout_constraintTop_toBottomOf="birdyCrowm"
+                    app:layout_constraintTop_toBottomOf="@+id/birdyCrown"
                     tools:listitem="@layout/layout_bird_item"
                     />
             </androidx.constraintlayout.widget.ConstraintLayout>
