@@ -20,10 +20,10 @@
         android:id="@+id/messages"
         android:enabled="true"
         android:title="@string/messages"
-        android:icon="@drawable/ic_messages_icon"/>
+        android:icon="@drawable/ic_location_icon_grey"/>
     <item
         android:id="@+id/profile"
         android:enabled="true"
         android:title="@string/profile"
-        android:icon="@drawable/ic_account"/>
+        android:icon="@drawable/ic_profile_icon"/>
 </menu>

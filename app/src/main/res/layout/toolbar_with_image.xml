@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="29dp"
+            android:layout_marginStart="12dp"
             android:textSize="@dimen/text_size_heading"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/logo_imageView"
@@ -48,17 +48,18 @@
             android:id="@+id/find_person_imageView"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="12dp"
             android:src="@drawable/ic_find_person"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/setting_imageView"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.55" />
 
         <ImageView
             android:id="@+id/setting_imageView"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="12dp"
             android:src="@drawable/ic_settings_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/log_out_imageView"
