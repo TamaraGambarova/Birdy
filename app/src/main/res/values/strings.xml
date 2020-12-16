@@ -52,4 +52,9 @@
     <string name="play">Play</string>
     <string name="start_time">00:00:00</string>
     <string name="enter_top_amount">Enter Top Amount</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="yes">Yes</string>
+    <string name="no">Close</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="reset_pass_button">Reset password</string>
 </resources>

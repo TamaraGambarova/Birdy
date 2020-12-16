@@ -3,6 +3,7 @@ package com.example.birdyapp.features.searching_by_name.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -292,6 +293,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                                     //fillBirdsRecyclerView(BirdModel())
                                     /* bird_by_photo_name.visibility = View.VISIBLE
                                      bird_by_photo_name.text = it.birdName*/
+                                    openDialog(it.birdName)
                                     Log.d("onSuccess", it.birdName)
                                 }, onError = {
                                     it.printStackTrace()
@@ -319,6 +321,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         return Bitmap.createBitmap(
             bm, 0, 0, width, height, matrix, false
         )
+    }
+
+    private fun openDialog(name: String) {
+        AlertDialog.Builder(requireContext())
+            .setMessage("Found bird: " + name)
+            .setPositiveButton(R.string.yes) { _, _ ->
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 
     private fun validate(value: String): Boolean {

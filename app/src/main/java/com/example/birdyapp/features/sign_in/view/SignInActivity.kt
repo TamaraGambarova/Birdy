@@ -73,6 +73,10 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
                 toastManager.short(R.string.no_connection)
             }
         }
+
+        forgot_password.setOnClickListener {
+            //TODO
+        }
     }
 
     private fun initFields() {

@@ -12,6 +12,21 @@ service MainEndpoint {
 	rpc SubscribeToNewMessages(Empty) returns (stream ChatMessage) {}
 	rpc UpdateUser(UserInfo) returns (Empty) {}
 	rpc GetTopBirds(GetTopBirdsRequest) returns (stream EncyclopedicBirdInfo) {}
+	rpc ResetPassword(ResetPasswordRequest) returns (Empty) {}
+	rpc VerifyToken(VerifyTokenRequest) returns (VerifyTokenResponse) {}
+}
+
+message VerifyTokenResponse{
+	bool result = 1;
+}
+
+message VerifyTokenRequest{
+	string token = 1;
+}
+
+
+message ResetPasswordRequest {
+	string email = 1;
 }
 
 message GetTopBirdsRequest{
