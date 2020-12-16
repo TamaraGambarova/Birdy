@@ -12,6 +12,7 @@ import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.ActivitySignInBinding
 import com.example.birdyapp.extensions.makeLinks
+import com.example.birdyapp.features.recovery.RecoveryActivity
 import com.example.birdyapp.features.sign_in.model.Credentials
 import com.example.birdyapp.features.sign_up.view.SignUpActivity
 import com.example.birdyapp.identity.CredentialsProvider
@@ -75,7 +76,12 @@ class SignInActivity : AppCompatActivity(), KodeinAware {
         }
 
         forgot_password.setOnClickListener {
-            //TODO
+            startActivity(
+                Intent(
+                    this,
+                    RecoveryActivity::class.java
+                )
+            )
         }
     }
 

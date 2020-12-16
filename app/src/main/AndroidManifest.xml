@@ -55,17 +55,19 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" >
+
+        </activity>
+        <activity
+            android:name=".features.sign_in.view.SignInActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".features.sign_in.view.SignInActivity"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".features.sign_up.view.SignUpActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
@@ -86,6 +88,16 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity android:name=".features.recovery.RecoveryActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity android:name=".features.recovery.TfaActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

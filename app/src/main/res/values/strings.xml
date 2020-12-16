@@ -57,4 +57,11 @@
     <string name="no">Close</string>
     <string name="confirm_password_hint">Confirm password</string>
     <string name="reset_pass_button">Reset password</string>
+    <string name="almost_done">Almost done</string>
+    <string name="check_your_email_to_reset_pass">Check your email to reset password</string>
+    <string name="ok">Ok</string>
+    <string name="open_email_app">Open Email</string>
+    <string name="tfa_email_hint">Enter 4 digits we sent to your email</string>
+    <string name="tfa_hint">Code</string>
+    <string name="continue_action">Continue</string>
 </resources>

@@ -215,7 +215,7 @@ class Repository(private val channel: Channel) {
         long: Double,
         finder: String
     ): Single<Birdy.AddBirdWithDataResponse> {
-        try{
+        try {
             val blockingStub = newBlockingStub(channel)
             val setLocationRequest =
                 Birdy.AddBirdWithDataRequest.newBuilder()
@@ -233,9 +233,41 @@ class Repository(private val channel: Channel) {
                     ).build()
 
             return blockingStub.addBirdWithData(setLocationRequest).toBuilder().build().toSingle()
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
             return Single.error(e)
         }
     }
+
+    fun sendResetCode(email: String): Single<Birdy.Empty> {
+        return try {
+            val blockingStub = newBlockingStub(channel)
+            val resetPasswordRequest =
+                Birdy.ResetPasswordRequest.newBuilder()
+                    .setEmail(email)
+                    .build()
+
+            blockingStub.resetPassword(resetPasswordRequest).toBuilder().build().toSingle()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Single.error(e)
+        }
+    }
+
+    fun verifyToken(): Single<Birdy.VerifyTokenResponse> {
+        return try {
+            val blockingStub = newBlockingStub(channel)
+            val verifyTokenRequest =
+                Birdy.VerifyTokenRequest.newBuilder()
+                    .build()
+
+            blockingStub.verifyToken(verifyTokenRequest).toBuilder().build().toSingle()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Single.error(e)
+        }
+    }
+
 }
