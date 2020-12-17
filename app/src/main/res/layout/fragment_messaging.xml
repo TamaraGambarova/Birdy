@@ -23,6 +23,19 @@
                 android:layout_height="wrap_content">
                 <!-- toolbar -->
 
+                <ImageView
+                    android:id="@+id/birdyCrown"
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="12dp"
+                    android:icon="@drawable/ic_bird_logo"
+                    android:src="@drawable/ic_crowned_crane"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.458"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:background="@color/transparent" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/cityLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -35,7 +48,7 @@
                     app:boxCornerRadiusTopEnd="10dp"
                     app:boxCornerRadiusTopStart="10dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/birdyCrown">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/inputLocation"

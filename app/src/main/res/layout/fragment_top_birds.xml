@@ -24,18 +24,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+
                 <ImageView
                     android:id="@+id/birdyCrowm"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
+                    android:layout_marginTop="108dp"
                     android:icon="@drawable/ic_bird_logo"
                     android:src="@drawable/ic_crowned_bird"
-                    tools:background="@color/transparent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="@dimen/standard_margin"/>
-
+                    app:layout_constraintHorizontal_bias="0.498"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:background="@color/transparent" />
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/topCount"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
