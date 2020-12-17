@@ -3,6 +3,7 @@ package com.example.birdyapp.features.searching_by_name.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -41,7 +42,10 @@ import kotlinx.android.synthetic.main.fragment_find_bird_by_name.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
-import java.io.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 
 class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
@@ -50,7 +54,6 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private val toastManager: ToastManager by instance()
 
     private val cameraPermission = PermissionManager(Manifest.permission.CAMERA, 404)
-    private val audioPermission = PermissionManager(Manifest.permission.RECORD_AUDIO, 403)
     private val fineLocationPermission =
         PermissionManager(Manifest.permission.ACCESS_FINE_LOCATION, 2)
     private val coarseLocationPermission =
@@ -59,12 +62,6 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private val birdsAdapter: BirdsAdapter by lazy {
         BirdsAdapter()
     }
-
-    private var recorder: MediaRecorder? = null
-    private var player: MediaPlayer? = null
-
-    private var fileName: String = ""
-
 
     private lateinit var currentLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -296,6 +293,7 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                                     //fillBirdsRecyclerView(BirdModel())
                                     /* bird_by_photo_name.visibility = View.VISIBLE
                                      bird_by_photo_name.text = it.birdName*/
+                                    openDialog(it.birdName)
                                     Log.d("onSuccess", it.birdName)
                                 }, onError = {
                                     it.printStackTrace()
@@ -323,6 +321,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         return Bitmap.createBitmap(
             bm, 0, 0, width, height, matrix, false
         )
+    }
+
+    private fun openDialog(name: String) {
+        AlertDialog.Builder(requireContext())
+            .setMessage("Found bird: " + name)
+            .setPositiveButton(R.string.yes) { _, _ ->
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 
     private fun validate(value: String): Boolean {

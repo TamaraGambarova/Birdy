@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), KodeinAware {
                     SearchBirdByNameFragment.getInstance(channel)
                 }
                 R.id.top -> {
-                    TopFragment.getInstance()
+                    TopFragment.getInstance(channel)
                 }
                 R.id.messages -> {
                     //OfflineFragment.getInstance(channel)
