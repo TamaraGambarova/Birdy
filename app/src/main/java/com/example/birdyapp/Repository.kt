@@ -65,7 +65,6 @@ class Repository(private val channel: Channel) {
                 ).build()
 
         return blockingStub.addBirdWithData(setLocationRequest).toBuilder().build().toSingle()
-        //Log.d("test-loc", response.birdName)
     }
 
     fun loginUser(
@@ -185,4 +184,92 @@ class Repository(private val channel: Channel) {
         return blockingStub.updateUser(userInfo).toSingle().ignoreElement()
         ///response.result.toSingle()
     }
+
+    fun getBirdsTop(amount: Int): Single<MutableList<Birdy.EncyclopedicBirdInfo>> {
+        try {
+            val blockingStub = newBlockingStub(channel)
+            val getTopRequest = Birdy.GetTopBirdsRequest
+                .newBuilder()
+                .setCount(amount)
+                .build()
+
+            val response = blockingStub.getTopBirds(getTopRequest)
+
+            val birds = mutableListOf<Birdy.EncyclopedicBirdInfo>()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                response.forEachRemaining {
+                    Log.d("bird-top", it.name)
+                    birds.add(it)
+                }
+            }
+            return birds.toSingle()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Single.error(e)
+        }
+    }
+
+    fun birdBySound(
+        sound: ByteString,
+        lat: Double,
+        long: Double,
+        finder: String
+    ): Single<Birdy.AddBirdWithDataResponse> {
+        try {
+            val blockingStub = newBlockingStub(channel)
+            val setLocationRequest =
+                Birdy.AddBirdWithDataRequest.newBuilder()
+                    .setSound(sound)
+                    .setInfo(
+                        Birdy.UserBirdInfo.newBuilder()
+                            .setFoundPoint(
+                                Birdy.UserBirdInfo.Point.newBuilder()
+                                    .setLatitude(lat)
+                                    .setLongitude(long)
+                                    .build()
+                            )
+                            .setFinderEmail(finder)
+                            .setFoundTime(Calendar.getInstance().time.toString())
+                    ).build()
+
+            return blockingStub.addBirdWithData(setLocationRequest).toBuilder().build().toSingle()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Single.error(e)
+        }
+    }
+
+    fun sendResetCode(email: String): Single<Birdy.Empty> {
+        return try {
+            val blockingStub = newBlockingStub(channel)
+            val resetPasswordRequest =
+                Birdy.ResetPasswordRequest.newBuilder()
+                    .setEmail(email)
+                    .build()
+
+            blockingStub.resetPassword(resetPasswordRequest).toBuilder().build().toSingle()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Single.error(e)
+        }
+    }
+
+    fun verifyToken(token: String, email: String): Single<Birdy.VerifyTokenResponse> {
+        return try {
+            val blockingStub = newBlockingStub(channel)
+            val verifyTokenRequest =
+                Birdy.VerifyTokenRequest.newBuilder()
+                    .setToken(token)
+                    .setEmail(email)
+                    .build()
+
+            blockingStub.verifyToken(verifyTokenRequest).toBuilder().build().toSingle()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Single.error(e)
+        }
+    }
+
 }

@@ -15,13 +15,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/profile_background"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ImageView
             android:id="@+id/profilePhoto"
             android:layout_width="200dp"
             android:layout_height="170dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="128dp"
             android:background="#999"
             android:src="@drawable/ic_profile_picture"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@{fragment.userForm.birthdayDate.toString()}"
+            android:text="19 years old"
             tools:text="24 years old"
             android:textColor="#000"
             app:layout_constraintEnd_toEndOf="parent"

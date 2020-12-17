@@ -10,7 +10,28 @@ service MainEndpoint {
 	rpc AddBirdWithData(AddBirdWithDataRequest) returns (AddBirdWithDataResponse) {}
 	rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
 	rpc SubscribeToNewMessages(Empty) returns (stream ChatMessage) {}
-	rpc UpdateUser(.birdy_grpc.UserInfo) returns (Empty) {}
+	rpc UpdateUser(UserInfo) returns (Empty) {}
+	rpc GetTopBirds(GetTopBirdsRequest) returns (stream EncyclopedicBirdInfo) {}
+	rpc ResetPassword(ResetPasswordRequest) returns (Empty) {}
+	rpc VerifyToken(VerifyTokenRequest) returns (VerifyTokenResponse) {}
+}
+
+message VerifyTokenResponse{
+	bool result = 1;
+}
+
+message VerifyTokenRequest{
+	string token = 1;
+	string email = 2;
+}
+
+
+message ResetPasswordRequest {
+	string email = 1;
+}
+
+message GetTopBirdsRequest{
+	int32 count = 1;
 }
 
 message UserInfo{

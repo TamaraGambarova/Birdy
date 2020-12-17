@@ -44,4 +44,24 @@
     <string name="edit_profile">Edit profile</string>
     <string name="location">" location"</string>
     <string name="find_users">Find users</string>
+    <string name="grant_audio_permission">Please, grant audio permission!</string>
+    <string name="record_audio">Record audio</string>
+    <string name="record">Record</string>
+    <string name="stop">Stop</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="start_time">00:00:00</string>
+    <string name="enter_top_amount">Enter Top Amount</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="yes">Yes</string>
+    <string name="no">Close</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="reset_pass_button">Reset password</string>
+    <string name="almost_done">Almost done</string>
+    <string name="check_your_email_to_reset_pass">Check your email to reset password</string>
+    <string name="ok">Ok</string>
+    <string name="open_email_app">Open Email</string>
+    <string name="tfa_email_hint">Enter code we sent to your email</string>
+    <string name="tfa_hint">Code</string>
+    <string name="continue_action">Continue</string>
 </resources>

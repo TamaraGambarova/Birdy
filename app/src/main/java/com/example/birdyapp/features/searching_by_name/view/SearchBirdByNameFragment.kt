@@ -3,11 +3,14 @@ package com.example.birdyapp.features.searching_by_name.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.location.Location
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -24,11 +27,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.birdyapp.R
 import com.example.birdyapp.Repository
 import com.example.birdyapp.databinding.FragmentFindBirdByNameBinding
-import com.example.birdyapp.features.map.BirdMapActivity
 import com.example.birdyapp.features.map.MapsActivity
 import com.example.birdyapp.features.searching_by_name.model.BirdModel
 import com.example.birdyapp.features.searching_by_name.view.adapters.BirdsAdapter
-import com.example.birdyapp.features.sign_in.view.SignInActivity
 import com.example.birdyapp.identity.CredentialsProvider
 import com.example.birdyapp.util.*
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -61,7 +62,6 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
     private val birdsAdapter: BirdsAdapter by lazy {
         BirdsAdapter()
     }
-
 
     private lateinit var currentLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -105,6 +105,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                 this::toCapture
             ) { toastManager.short(R.string.grant_camera_permission) }
         }
+
+        recordBtn.setOnClickListener {
+            startActivity(
+                Intent(
+                    requireContext(),
+                    AudioRecordActivity::class.java
+                )
+            )
+           }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -282,8 +291,9 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
                             .subscribeBy(
                                 onSuccess = {
                                     //fillBirdsRecyclerView(BirdModel())
-                                    bird_by_photo_name.visibility = View.VISIBLE
-                                    bird_by_photo_name.text = it.birdName
+                                    /* bird_by_photo_name.visibility = View.VISIBLE
+                                     bird_by_photo_name.text = it.birdName*/
+                                    openDialog(it.birdName)
                                     Log.d("onSuccess", it.birdName)
                                 }, onError = {
                                     it.printStackTrace()
@@ -311,6 +321,15 @@ class SearchBirdByNameFragment(val channel: Channel) : ScopedFragment(), KodeinA
         return Bitmap.createBitmap(
             bm, 0, 0, width, height, matrix, false
         )
+    }
+
+    private fun openDialog(name: String) {
+        AlertDialog.Builder(requireContext())
+            .setMessage("Found bird: " + name)
+            .setPositiveButton(R.string.yes) { _, _ ->
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 
     private fun validate(value: String): Boolean {

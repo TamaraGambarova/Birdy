@@ -29,7 +29,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/birdNameLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="256dp"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/standard_margin"
                     android:layout_marginTop="@dimen/standard_margin"
@@ -47,6 +47,18 @@
                         android:hint="@string/find_by_name_hint"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/recordBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="76dp"
+                    android:layout_marginStart="@dimen/one_and_a_half_margin"
+                    android:background="@drawable/background_button"
+                    android:src="@drawable/ic_bird_voice_icon"
+                    app:layout_constraintStart_toEndOf="@+id/birdNameLayout"
+                    app:layout_constraintTop_toTopOf="@+id/birdNameLayout" />
 
                 <ImageButton
                     android:id="@+id/searchBtn"
@@ -119,17 +131,6 @@
                     app:layout_constraintTop_toBottomOf="@id/filterIcon"
                     tools:itemCount="2"
                     tools:listitem="@layout/layout_bird_item" />
-
-                <TextView
-                    android:id="@+id/bird_by_photo_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="80dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:visibility="gone"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
