@@ -39,7 +39,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/cityLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="306dp"
+                    android:layout_width="301dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="5dp"
