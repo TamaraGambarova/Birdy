@@ -255,11 +255,13 @@ class Repository(private val channel: Channel) {
         }
     }
 
-    fun verifyToken(): Single<Birdy.VerifyTokenResponse> {
+    fun verifyToken(token: String, email: String): Single<Birdy.VerifyTokenResponse> {
         return try {
             val blockingStub = newBlockingStub(channel)
             val verifyTokenRequest =
                 Birdy.VerifyTokenRequest.newBuilder()
+                    .setToken(token)
+                    .setEmail(email)
                     .build()
 
             blockingStub.verifyToken(verifyTokenRequest).toBuilder().build().toSingle()

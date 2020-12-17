@@ -27,7 +27,8 @@ class RecoveryActivity : AppCompatActivity(), KodeinAware {
 
     val fields: MutableMap<String, MutableLiveData<String>> = mutableMapOf(
         "email" to MutableLiveData(),
-        "password" to MutableLiveData()
+        "password" to MutableLiveData(),
+        "confirm_password" to MutableLiveData()
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +36,8 @@ class RecoveryActivity : AppCompatActivity(), KodeinAware {
 
         val binding: ActivityRecoveryBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_recovery)
-        binding.lifecycleOwner = this
         binding.activity = this
+        binding.lifecycleOwner = this
 
         channel = ActivitiesUtil.initChannel()
         initFields()
@@ -79,12 +80,15 @@ class RecoveryActivity : AppCompatActivity(), KodeinAware {
             .setMessage(R.string.check_your_email_to_reset_pass)
             .setPositiveButton(R.string.ok) { _, _ ->
                 openMailbox()
+                openTfa()
             }
             .setNeutralButton(R.string.open_email_app) { _, _ ->
                 openMailbox()
+                openTfa()
             }
             .setOnCancelListener {
                 openMailbox()
+                openTfa()
             }
             .show()
 
@@ -94,10 +98,20 @@ class RecoveryActivity : AppCompatActivity(), KodeinAware {
         startActivity(
             Intent.createChooser(
                 Intent(Intent.ACTION_MAIN)
-                    .addCategory(Intent.CATEGORY_APP_EMAIL)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                    .addCategory(Intent.CATEGORY_APP_EMAIL),
                 getString(R.string.open_email_app)
             )
+        )
+    }
+
+    private fun openTfa() {
+        val intent = Intent(
+            this,
+            TfaActivity::class.java
+        )
+        intent.putExtra("email", fields["email"]?.value!!)
+        startActivity(
+            intent
         )
     }
 }

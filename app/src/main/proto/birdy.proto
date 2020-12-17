@@ -22,6 +22,7 @@ message VerifyTokenResponse{
 
 message VerifyTokenRequest{
 	string token = 1;
+	string email = 2;
 }
 
 
