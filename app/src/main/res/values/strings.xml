@@ -61,7 +61,7 @@
     <string name="check_your_email_to_reset_pass">Check your email to reset password</string>
     <string name="ok">Ok</string>
     <string name="open_email_app">Open Email</string>
-    <string name="tfa_email_hint">Enter 4 digits we sent to your email</string>
+    <string name="tfa_email_hint">Enter code we sent to your email</string>
     <string name="tfa_hint">Code</string>
     <string name="continue_action">Continue</string>
 </resources>

@@ -110,6 +110,7 @@ class RecoveryActivity : AppCompatActivity(), KodeinAware {
             TfaActivity::class.java
         )
         intent.putExtra("email", fields["email"]?.value!!)
+        intent.putExtra("password", fields["password"]?.value!!)
         startActivity(
             intent
         )

@@ -19,18 +19,21 @@ import kotlinx.android.synthetic.main.activity_tfa.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
+import java.util.*
 
 class TfaActivity : AppCompatActivity(), KodeinAware {
     override val kodein by closestKodein()
     private lateinit var channel: Channel
     private val toastManager: ToastManager by instance()
     private lateinit var email: String
+    private lateinit var password: String
 
     val otpCode = MutableLiveData<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         email = intent.getStringExtra("email")!!
+        password = intent.getStringExtra("password")!!
 
         val binding: ActivityTfaBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_tfa)
@@ -52,15 +55,30 @@ class TfaActivity : AppCompatActivity(), KodeinAware {
             .compose(ObservableTransformers.defaultSchedulersSingle())
             .subscribeBy(
                 onSuccess = {
-                    if(it.result) {
-                        toastManager.long("Password changed!")
-
-                        openSignIn()
+                    if (it.result) {
+                        updateUser()
                     }
                 },
                 onError = {
                     it.printStackTrace()
                     toastManager.short("Something went wrong...")
+                }
+            )
+    }
+
+    private fun updateUser() {
+        Repository(channel).updateUserInfo(
+            UserFields("Tamara", "Gambarova", "-", Date(), "Kharkiv"),
+            email, password
+        ).compose(ObservableTransformers.defaultSchedulersCompletable())
+            .subscribeBy(
+                onComplete = {
+                    toastManager.long("Password changed!")
+                    openSignIn()
+                },
+                onError = {
+                    it.printStackTrace()
+                    toastManager.short("Something wrong")
                 }
             )
     }
